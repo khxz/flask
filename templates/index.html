@@ -118,7 +118,8 @@
     var tweet1 = tweets[x]; 
     var user = users[x];
     var date = dates[x];
-    var links = link[x]
+    var links = link[x];
+    
     var tr = document.createElement('tr');
     
     var td1 = document.createElement('td');
@@ -130,12 +131,11 @@
     var td3 = document.createElement('td');
     td3.innerHTML = tweet1.substring(1, tweet1.length-2).replace("&#39","").replace("&#34","").replace(";","").replace("RT","").replace("&#39","").replace("&#34","");
 
-    
     var td4 = document.createElement('td');
 
     var button1 = document.createElement('button');
     var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
-    button1.innerHTML = <i class="fa fa-twitter-square" aria-hidden="true" style="font-size:25px;"></i>
+    button1.innerHTML = '<i class="fa fa-twitter-square" aria-hidden="true" style="font-size:22px;"></i>'
     button1.setAttribute("onClick","window.open('"+ str +"')");
     td4.append(button1);
     tr.appendChild(td1);
