@@ -1,0 +1,161 @@
+@font-face {
+    font-family: 'tradegothic'; /*a name to be used later*/
+    src: url_for('static',filename='styles/fonts/Gothic\ LT\ Bold\ Condensed\ No.\ 20.ttf.ttf')
+}
+
+@font-face {
+    font-family: 'helveticaL'; /*a name to be used later*/
+    src: url_for('static',filename='styles/fonts/HelveticaNeueLt.ttf') /*URL to font*/
+
+}
+
+* { 
+    box-sizing: border-box; 
+}
+
+body{
+    font-family: helvetica;
+    -webkit-font-smoothing: antialiased;
+    background: linear-gradient(-70deg, #0B0C10 30%, #1F2833 30%);
+}
+
+
+h2{
+    font-family: 'tradegothic';
+    text-align: center;
+    font-size: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #66FCF1;
+    padding: 30px 0; 
+}
+  
+.columnmain {
+    float: left;
+    width: 75%;
+    padding: 5px;
+}
+
+.columnsub {
+    float: left;
+    width: 25%;
+    padding: 5px;
+}
+
+.row { 
+    margin-left:5px; 
+    margin-right:5px;
+  }
+
+/* Clearfix (clear floats) */
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+th {
+    position: sticky;
+    top: 0px;  /* 0px if you don't have a navbar, but something is required */
+    background: white;
+}
+
+.tablemain {
+  display: block;
+  overflow-y: scroll;
+  table-layout: fixed;
+    float: left;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 75%;
+    height: 500px;
+    border: 0px solid #ffffff;
+    box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
+}
+
+.tablesub {
+    float: right;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 24%;
+    max-height: 220px;
+    border: 0px solid #ffffff;
+    box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
+    padding: 2px;
+}
+
+.fl-tablemain, .fl-tablesub {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    background-color: white;
+}
+
+.fl-tablemain td, .fl-tablemain th, .fl-tablesub td, .fl-tablesub th {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #45A29E;
+}
+
+.fl-tablemain td, .fl-tablesub td  {
+    border-right: 1px solid #ffffff;
+    font-size: 12px;
+}
+
+.fl-tablemain thead th {
+    font-family: 'helveticaL';
+    color: #ffffff;
+    background: #1F2833;
+}
+
+.fl-tablesub thead th{
+    color: #66FCF1;
+    background: #1F2833;
+    border: 1px solid #45A29E;
+}
+
+/* 
+.fl-tablemain thead th:nth-child(odd), .fl-tablesub thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #324960;
+}
+
+.fl-tablemain tr:nth-child(even), .fl-tablesub thead tr:nth-child(even) { 
+    background: #F8F8F8;
+} */
+
+tr:hover{
+    background-color:#ecf8ff;
+}
+
+.col-1{
+ width:10%;
+}
+
+.col-2{
+ width:20%;
+}
+
+.col-3{
+ width:50%;
+}
+.col-4{
+ width:10%;
+}
+.col-5{
+ width:10%;
+}
+
+/* for custom scrollbar for webkit browser*/
+
+::-webkit-scrollbar {
+    width: 6px;
+} 
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+} 
