@@ -8,12 +8,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webpage</title>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/tweet.css') }}">
+    <link href='https://css.gg/twitter.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 
 <body>
-    
+  <i class="gg-twitter" style="align:center;"></i>
+
+  <div class="header">
+    <div class="logo">
+      cyberbot
+    </div>
+    <div class="menu">
+      <a href="#" class="link">
+        <div class="title">profile</div>
+        <div class="bar"></div>
+      </a>
+      <a href="#" class="link">
+        <div class="title">tweet</div>
+        <div class="bar"></div>
+      </a>
+      <a href="#" class="link">
+        <div class="title">idk</div>
+        <div class="bar"></div>
+      </a>
+    </div>
+  </div>
+
+
   <h2>TWEETS REPORT</h2>
   <div class="row">
     <div class="table, columnmain, tablemain">
@@ -32,12 +56,33 @@
                 <tr>
 
                 </tr>
-                
         </tbody>
-      </table>
+      </table><br>
+      <button style="background:white; cursor:pointer;">refresh</button>
     </div>
   
-    
+<br>
+<br>
+
+<article class="l-design-widht">
+  <div class="cardd">  
+    <div class="card">
+      <h2><svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-coffee" href="#icon-coffee" /></svg>Tweet</h2>
+      <label class="input">
+        <textarea class="input__field" rows="4" cols="70" maxlength = "280" style="color:white;"></textarea>
+        <span class="input__label">tweet something...</span>
+      </label>
+      <div class="button-group">
+        <button>Send</button>
+        <button type="reset">Reset</button>
+      </div>
+    </div>
+  </div>
+  </article>
+
+  <br><br>
+
   <div class="table, columnsub, tablesub">
     <table class="fl-tablesub">
       <thead>
@@ -66,40 +111,22 @@
       </tr>
       </tbody>
     </table>
-<br> </br>
-    <table class="fl-tablesub">
-      <thead>
-        <tr>  <th colspan="5" style="text-align:center;">STATUS</th> </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>cell1_1</td>
-        <td>x</td>
-      </tr>
-      <tr>
-        <td>cell1_2</td>
-        <td>x</td>
-      </tr>
-      <tr>
-        <td>cell1_3</td>
-        <td>x</td>
-      </tr>
-      <tr>
-        <td>cell1_4</td>
-        <td>x</td>
-      </tr>
-      <tr>
-        <td>cell1_5</td>
-        <td>x</td>
-      </tr>
+<br>
 
-      <tr>
-        <td>cell1_5</td>
-        <td>x</td>
-      </tr>
-      </tbody>
-    </table>
+
   </div>
+
+  
+<svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+  <symbol id="icon-coffee" viewBox="0 0 20 20">
+    <title>icon-coffee</title>
+    <path fill="currentColor" d="M15,17H14V9h3a3,3,0,0,1,3,3h0A5,5,0,0,1,15,17Zm1-6v3.83A3,3,0,0,0,18,12a1,1,0,0,0-1-1Z"/>
+    <rect fill="currentColor" x="1" y="7" width="15" height="12" rx="3" ry="3"/>
+    <path fill="var(--color-accent)" d="M7.07,5.42a5.45,5.45,0,0,1,0-4.85,1,1,0,0,1,1.79.89,3.44,3.44,0,0,0,0,3.06,1,1,0,0,1-1.79.89Z"/>
+    <path fill="var(--color-accent)" d="M3.07,5.42a5.45,5.45,0,0,1,0-4.85,1,1,0,0,1,1.79.89,3.44,3.44,0,0,0,0,3.06,1,1,0,1,1-1.79.89Z"/>
+    <path fill="var(--color-accent)" d="M11.07,5.42a5.45,5.45,0,0,1,0-4.85,1,1,0,0,1,1.79.89,3.44,3.44,0,0,0,0,3.06,1,1,0,1,1-1.79.89Z"/>
+  </symbol>
+</svg>
 
 
   <script>

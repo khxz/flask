@@ -6,9 +6,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
+    import os
     import tweepy
     import configparser
     import pandas as pd
+    import datetime
 
 
     # read configs
@@ -45,6 +47,7 @@ def home():
     ['-hahahaha, -haha, -lenlen']
     languange = ['''tl''']
 
+    
     stream_tweets.filter(track=keywords,languages=languange)
 
     #Data Fram
@@ -54,7 +57,7 @@ def home():
     date = []
     link = []
     for tweet in stream_tweets.tweets:
-        if not tweet.truncated:
+        if not tweet.retweeted:
             data.append([tweet.text])
             username.append([tweet.user.screen_name])
             date.append([tweet.created_at])
