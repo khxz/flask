@@ -12,12 +12,13 @@
 
 
 NEED TO FIX:
-        
+    
+    ***please make the login.pug as our index.
+    ***tweet textfield (no function parin)
     ***BTN: warning and report no function pa
+    
     ***Loading screen: (more rules=more time to load.) [suggestion: maglagay ng loading screen or basta something na nag loloading siya just to infom the user]
     ***Refresh: [sugggestion: maglagay ng pop up or what na mag sasabi na bago na ung mga tweets na na collect]
-    ***please make the login.pug as our index.
-
     
     UPDATE
     ***Next btn: (diba first 10 tweets lang muna) [sugggestion: lagay us button]
