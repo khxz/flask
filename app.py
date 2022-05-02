@@ -44,7 +44,7 @@ def home():
     stream_tweets = Listener(api_key,api_key_secret,access_token,access_token_secret)
 
     keywords = ['leni, bbm, ping, kiko'],
-    ['-hahahaha, -haha, -lenlen']
+    ['-hahahaha, -haha, -lenlen, -filter:retweets']
     languange = ['''tl''']
 
     
@@ -52,24 +52,27 @@ def home():
 
     #Data Fram
 
+    foulwords = [keywords]
     data = []
     username = []
     date = []
     link = []
     for tweet in stream_tweets.tweets:
-        if not tweet.retweeted:
+        if not tweet.truncated:
             data.append([tweet.text])
             username.append([tweet.user.screen_name])
             date.append([tweet.created_at])
             link.append([tweet.id])
+            foulwords.append
         else:
             data.append([tweet.extended_tweet['full_text']])
             username.append([tweet.user.screen_name])
             date.append([tweet.created_at])
             link.append([tweet.id])
+            foulwords.append
         
 
-    return render_template("index.html", users=username,tweet=data,date=date,link=link)
+    return render_template("index.html", users=username,tweet=data,date=date,link=link,foulwords=foulwords)
     
     
 

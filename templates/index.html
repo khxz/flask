@@ -15,11 +15,11 @@
 </head>
 
 <body>
-  <i class="gg-twitter" style="align:center;"></i>
 
   <div class="header">
     <div class="logo">
-      cyberbot
+      <a href="https://twitter.com/krxzzxxsm">
+      cyberbot</a>
     </div>
     <div class="menu">
       <a href="#" class="link">
@@ -37,8 +37,11 @@
     </div>
   </div>
 
-
   <h2>TWEETS REPORT</h2>
+  
+  <div class="btnref">  
+    <button class="btnref" style="background:white; cursor:pointer;">refresh</button> 
+  </div>
   <div class="row">
     <div class="table, columnmain, tablemain">
       <table class="fl-tablemain" id ="table1">
@@ -57,8 +60,7 @@
 
                 </tr>
         </tbody>
-      </table><br>
-      <button style="background:white; cursor:pointer;">refresh</button>
+      </table>
     </div>
   
 <br>
@@ -82,39 +84,40 @@
   </article>
 
   <br><br>
-
-  <div class="table, columnsub, tablesub">
-    <table class="fl-tablesub">
+  <article class="l-design-widht">
+  <div class="cardd">
+  <div class="card">
+    <table class="fl-tablesub" id="table2">
       <thead>
- <th colspan="5" style="text-align:center;">FOUL WORDS</th>
+ <th colspan="5" style="text-align:center">FOUL WORDS</th>
       </thead>
       <tbody>
-      <tr>
-        <td>cell1_1</td>
-        <td>x</td>
-      </tr>
-      <tr>
-        <td>cell1_2</td>
-        <td>x</td>
-      </tr>
-      <tr>
-        <td>cell1_3</td>
-        <td>x</td>
-      </tr>
-      <tr>
-        <td>cell1_4</td>
-        <td>x</td>
-      </tr>
-      <tr>
-        <td>cell1_5</td>
-        <td>x</td>
-      </tr>
+      <script>
+        const keywords = [];
+
+        "{% for x in range(3) %}"
+        keywords.push("{{ foulwords[x] }}")
+        "{% endfor %}"
+
+        for(var x = 0; x<3;x++){
+        var foulwords = keywords[x];     
+    
+        var tr = document.createElement('tr');
+    
+        var td = document.createElement('td');
+        td.innerHTML = foulwords;
+        
+        tr.appendChild(td);
+        document.getElementById("table2").appendChild(tr);
+        }
+      </script>
       </tbody>
     </table>
 <br>
+</div>
+</div></div>
+</article>
 
-
-  </div>
 
   
 <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
@@ -150,13 +153,13 @@
     var tr = document.createElement('tr');
     
     var td1 = document.createElement('td');
-    td1.innerHTML = date;
+    td1.innerHTML = date.replace("[datetime.datetime(","").replace(", ","-").replace(", ","-").replace(","," ").replace(", ",":").replace(", ",":").replace(", tzinfo=datetime.timezone.utc)]","");
 
     var td2 = document.createElement('td');
     td2.innerHTML = "@"+user.substring(6, user.length-6);
 
     var td3 = document.createElement('td');
-    td3.innerHTML = tweet1.substring(1, tweet1.length-2).replace("&#39","").replace("&#34","").replace(";","").replace("RT","").replace("&#39","").replace("&#34","");
+    td3.innerHTML = tweet1.substring(1, tweet1.length-2).replace("&#39","").replace("&#34","").replace(";","").replace("&#39","").replace("&#34","");
 
     var td4 = document.createElement('td');
 
@@ -164,11 +167,29 @@
     var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
     button1.innerHTML = '<i class="fa fa-twitter-square" aria-hidden="true" style="font-size:22px;"></i>'
     button1.setAttribute("onClick","window.open('"+ str +"')");
+    var td4 = document.createElement('td');
+
+    var button2 = document.createElement('button');
+    var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
+    button2.innerHTML = '<i class="fa fa-inbox" aria-hidden="true" style="font-size:22px;"></i>'
+    button2.setAttribute("onClick","window.open('"+ str +"')");
+    var td5 = document.createElement('td');
+
+    var button3 = document.createElement('button');
+    var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
+    button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>'
+    button3.setAttribute("onClick","window.open('"+ str +"')");
+    var td6 = document.createElement('td');
+
+    td6.append(button3);
+    td5.append(button2);
     td4.append(button1);
     tr.appendChild(td1);
     tr.appendChild(td2);
     tr.appendChild(td3);
     tr.appendChild(td4);
+    tr.appendChild(td5);
+    tr.appendChild(td6);
     document.getElementById("table1").appendChild(tr);
     }
 

@@ -6,7 +6,6 @@
 @font-face {
     font-family: 'helveticaL'; /*a name to be used later*/
     src: url_for('static',filename='styles/fonts/HelveticaNeueLt.ttf') /*URL to font*/
-
 }
 
 * { 
@@ -27,7 +26,7 @@ h2{
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #66FCF1;
-    padding: 30px 0; 
+    padding: 10px 0; 
 }
   
 .columnmain {
@@ -74,6 +73,10 @@ th {
     margin-left: 32px; /* half of width */
 }
 
+.btnref {
+    text-align: right;
+    margin-right: 20px;
+}
 .tablesub {
     float: left;
     border-collapse: collapse;
@@ -140,17 +143,17 @@ tr:hover{
 }
 
 .col-2{
- width:20%;
+ width:10%;
 }
 
 .col-3{
- width:50%;
+ width:66%;
 }
 .col-4{
- width:10%;
+ width:5%;
 }
 .col-5{
- width:10%;
+ width:5%;
 }
 
 /* for custom scrollbar for webkit browser*/
