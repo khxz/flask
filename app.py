@@ -43,8 +43,9 @@ def home():
 
     stream_tweets = Listener(api_key,api_key_secret,access_token,access_token_secret)
 
-    keywords = ['leni, bbm, ping, kiko'],
-    ['-hahahaha, -haha, -lenlen, -filter:retweets']
+    keywords = ['bobo, tanga, kupal, gago'],
+    ['-hahahaha, -haha, -emoji, -is:retweet'], 
+    
     languange = ['''tl''']
 
     
