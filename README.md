@@ -8,6 +8,7 @@
 
  to run:
  -py -m flask run
+ 
  -pug filename.pug (to convert the pug to html)(html dapat ung iparun para ma view ung page)
 
 
