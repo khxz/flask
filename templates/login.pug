@@ -5,7 +5,7 @@ head
 meta(charset='utf-8')
 link(rel="stylesheet", href="/static/styles/auth.css")
 title auth
-
+flask
 body
 
 div.login
@@ -31,4 +31,5 @@ form(onsubmit=`return false;`)
   .app
     h1 You logged in! 🎉
     button.logout-button(type='reset') Logout
+    a.btn(href='http://127.0.0.1:5000') press
   span.logout-message You have logged out.
