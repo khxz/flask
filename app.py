@@ -43,10 +43,13 @@ def home():
 
     stream_tweets = Listener(api_key,api_key_secret,access_token,access_token_secret)
 
-    keywords = [
-        {'bobo, tanga, kupal, gago'},
-    {'-hahahaha -haha -emoji -is:retweet -is:quote "-RT @" "-parang tanga" "-tanga lang" '}, ]
     
+
+    keywords = [
+        {'bobo, tanga, kupal, gago'}, #paano to magagawang per index yung mga keywords?
+        {'-hahahaha, -haha, -emoji, -RT'} 
+    ]
+    # pag lumalabas parin yung parang tanga, tanga lang, ilagay yung - sa labas ng double quote -"parang tanga" -"tanga lang"
     languange = ['''tl''']
 
     
