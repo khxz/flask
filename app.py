@@ -1,4 +1,5 @@
 import os
+from warnings import catch_warnings
 import tweepy
 import configparser
 import pandas as pd
@@ -82,10 +83,14 @@ def tweet():
     api.update_status(tweet)
     return redirect(url_for("home"))
 
-@app.route("/<name>")
-def user(name):
-    api.update_status("Sample Reply111", in_reply_to_status_id = name , auto_populate_reply_metadata=True)
-    return redirect(url_for("home"))
+@app.route("/product/<user>/<name>")
+def user(name,user):
+    try:
+        api.update_status("Sample Reply111", in_reply_to_status_id = name , auto_populate_reply_metadata=True)
+        return render_template('warning.html',sucess="success")  
+    except Exception as e :
+        print(e)
+        return render_template('warning.html',error=e, users = user,tweets=name)  
 
 
 if __name__ == "__main__":

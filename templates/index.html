@@ -172,7 +172,7 @@
     var button2 = document.createElement('button');
     var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
     button2.innerHTML = '<i class="fa fa-inbox" aria-hidden="true" style="font-size:22px;"></i>'
-    button2.setAttribute("onClick","window.open('/"+  links.substring(1, links.length-1) +"')");
+    button2.setAttribute("onClick","window.open('product/"+ user.substring(6, user.length-6) +"/"+  links.substring(1, links.length-1) +"')");
     var td5 = document.createElement('td');
 
     var button3 = document.createElement('button');
@@ -191,10 +191,11 @@
     tr.appendChild(td5);
     tr.appendChild(td6);
     document.getElementById("table1").appendChild(tr);
+    
     }
 
 </script>
-
+    {
 
 </body>
 </html>
