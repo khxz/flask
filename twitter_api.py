@@ -1,55 +1,16 @@
 import tweepy
-import configparser
-import pandas as pd
-
-
-# read configs
-config = configparser.ConfigParser()
-config.read('config.ini')
-
-api_key = config['twitter']['api_key']
-api_key_secret = config['twitter']['api_key_secret']
-
-access_token = config['twitter']['access_token']
-access_token_secret = config['twitter']['access_token_secret']
-
-# authentication
-auth = tweepy.OAuthHandler(api_key, api_key_secret)
-auth.set_access_token(access_token, access_token_secret)
-
-api = tweepy.API(auth)
-
-class Listener(tweepy.Stream):
-    tweets = []
-    limit = 10
-    def on_status(self, status):
-        self.tweets.append(status)
-       # print(status.user.screen_name + ": " + status.text)
-
-        if len(self.tweets) == self.limit:
-            self.disconnect()
+from tweepy import API
+from tweepy import OAuthHandler
 
 
 
-stream_tweets = Listener(api_key,api_key_secret,access_token,access_token_secret)
-
-keywords = ['2022']
-
-stream_tweets.filter(track=keywords)
-
-
-#Data Fram
-columns = ['User','Tweet']
-data = []
+CONSUMER_KEY ='gUHn0tg6rroVfRpddz0Dt9r3w'
+CONSUMER_SECRET = 'HQJKsuP7fs27VIvPMLV6r10XED45TCShpwCiWfJ1wslfoUVIu4'   
+ACCESS_KEY = '703740762710609920-WlBlY29OUSplpiRQlo86hvgBMMX22Rc'  
+ACCESS_SECRET = 'x9oiMT7LGGG1uYEnBLc6qXuYOJnT7FC3jTIuljrGoRPOK'
 
 
-for tweet in stream_tweets.tweets:
-    if not tweet.truncated:
-        data.append([tweet.user.location,tweet.text])
-    else:
-        data.append([tweet.user.location,tweet.extended_tweet['full_text']])
-
-    
-
-df = pd.DataFrame(data, columns=columns)
-print(df)
+auth = tweepy.OAuthHandler(CONSUMER_KEY,CONSUMER_SECRET)
+auth.set_access_token(ACCESS_KEY,ACCESS_SECRET)
+api = tweepy.API(auth, wait_on_rate_limit= True)
+api.update_status('Updating using OAuth authentication via Tw11eepy!', in_reply_to_status_id = 1522277485169483777  ,auto_populate_reply_metadata=True)

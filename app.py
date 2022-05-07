@@ -1,33 +1,34 @@
-
+import os
+import tweepy
+import configparser
+import pandas as pd
+import datetime
 from flask import Flask,redirect,url_for,render_template
+from requests import request
 
 app = Flask(__name__)
 
 
-@app.route('/')
-def home():
-    import os
-    import tweepy
-    import configparser
-    import pandas as pd
-    import datetime
-
 
     # read configs
-    config = configparser.ConfigParser()
-    config.read('config.ini')
+config = configparser.ConfigParser()
+config.read('config.ini')
 
-    api_key = config['twitter']['api_key']
-    api_key_secret = config['twitter']['api_key_secret']
+api_key = config['twitter']['api_key']
+api_key_secret = config['twitter']['api_key_secret']
 
-    access_token = config['twitter']['access_token']
-    access_token_secret = config['twitter']['access_token_secret']
+access_token = config['twitter']['access_token']
+access_token_secret = config['twitter']['access_token_secret']
 
     # authentication
-    auth = tweepy.OAuthHandler(api_key, api_key_secret)
-    auth.set_access_token(access_token, access_token_secret)
+auth = tweepy.OAuthHandler(api_key, api_key_secret)
+auth.set_access_token(access_token, access_token_secret)
 
-    api = tweepy.API(auth)
+api = tweepy.API(auth)
+@app.route('/')
+def home():
+
+
 
     class Listener(tweepy.Stream):
         tweets = []
@@ -45,15 +46,10 @@ def home():
 
     
 
-    keywords = [
-        {'bobo, tanga, kupal, gago'}, #paano to magagawang per index yung mga keywords?
-        {'-hahahaha, -haha, -emoji, -RT'} 
-    ]
-    # pag lumalabas parin yung parang tanga, tanga lang, ilagay yung - sa labas ng double quote -"parang tanga" -"tanga lang"
-    languange = ['''tl''']
+    keywords = ['2022']
 
-    
-    stream_tweets.filter(track=keywords,languages=languange)
+
+    stream_tweets.filter(track=keywords)
 
     #Data Fram
 
@@ -79,7 +75,18 @@ def home():
 
     return render_template("index.html", users=username,tweet=data,date=date,link=link,foulwords=foulwords)
     
-    
+@app.route('/tweet', methods=["POST","GET"])
+def tweet():
+    from flask import Flask,redirect,url_for,render_template, request
+    tweet = request.form["tweet"]
+    api.update_status(tweet)
+    return redirect(url_for("home"))
+
+@app.route("/<name>")
+def user(name):
+    api.update_status("Sample Reply111", in_reply_to_status_id = name , auto_populate_reply_metadata=True)
+    return redirect(url_for("home"))
+
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug = True)

@@ -66,22 +66,22 @@
 <br>
 <br>
 
-<article class="l-design-widht">
+<form class="l-design-widht" method="POST" action="/tweet">
   <div class="cardd">  
     <div class="card">
       <h2><svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-coffee" href="#icon-coffee" /></svg>Tweet</h2>
       <label class="input">
-        <textarea class="input__field" rows="4" cols="70" maxlength = "280" style="color:white;"></textarea>
+        <input type="text" class="input__field" style="color:white;" name="tweet">
         <span class="input__label">tweet something...</span>
       </label>
       <div class="button-group">
-        <button>Send</button>
+        <button type="submit">Send</button>
         <button type="reset">Reset</button>
       </div>
     </div>
   </div>
-  </article>
+</form>
 
   <br><br>
   <article class="l-design-widht">
@@ -172,7 +172,7 @@
     var button2 = document.createElement('button');
     var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
     button2.innerHTML = '<i class="fa fa-inbox" aria-hidden="true" style="font-size:22px;"></i>'
-    button2.setAttribute("onClick","window.open('"+ str +"')");
+    button2.setAttribute("onClick","window.open('/"+  links.substring(1, links.length-1) +"')");
     var td5 = document.createElement('td');
 
     var button3 = document.createElement('button');
