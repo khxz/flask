@@ -47,10 +47,14 @@ def home():
 
     
 
-    keywords = ['2022']
+    keywords = [ 
+        {'bobo, tanga, kupal, gago, tangina, pota, leche, ampota, fuck, stupid, bitch, btch'}, 
+        {'-hahahaha, -haha, -emoji, -RT'}
+        ]
+    language = ['''tl''']
 
 
-    stream_tweets.filter(track=keywords)
+    stream_tweets.filter(track=keywords, languages=language)
 
     #Data Fram
 
@@ -92,6 +96,18 @@ def user(name,user):
         print(e)
         return render_template('warning.html',error=e, users = user,tweets=name)  
 
+@app.route("/report/<username>/<name>")
+def username(name,username):
+    try:
+        api.report_spam(screen_name = username, perform_block = False)
+        return render_template('report_warning.html',sucess="success")  
+    except Exception as e :
+        print(e)
+        return render_template('report_warning.html',error=e, users = username,tweets=name)  
+
+@app.route('/refresh')
+def refresh():
+    return redirect(url_for("home"))
 
 if __name__ == "__main__":
     app.run(debug = True)

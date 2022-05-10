@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p id="error">{{error}}</p>
+    <p>USER ID: {{users}}</p> 
+    <p>TWEET ID: {{tweets}}</p> 
+    <script>
+        "{% if error %}"
+            var x = document.getElementById("error").innerHTML.replace(/(\r\n|\n|\r)/gm, "")
+            if(x == "403 Forbidden187 - Status is a duplicate."){
+                alert("You've already reported this account/tweet");
+            }
+            else{
+                alert("The Tweet is restricted");
+            }
+            close();
+            
+            
+            
+        "{% else %}"
+            alert("Report Submitted to Twitter");
+            close();
+        "{% endif %}"
+        
+
+    </script>
+</body>
+</html>

@@ -38,9 +38,15 @@
   </div>
 
   <h2>TWEETS REPORT</h2>
-  
+  <script>
+      function refresh() {
+            window.location.assign(
+                "/refresh");
+        }
+
+    </script>
   <div class="btnref">  
-    <button class="btnref" style="background:white; cursor:pointer;">refresh</button> 
+    <button name="refresh" class="btnref" style="background:white; cursor:pointer;" onclick="refresh()">refresh</button> 
   </div>
   <div class="row">
     <div class="table, columnmain, tablemain">
@@ -178,7 +184,7 @@
     var button3 = document.createElement('button');
     var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
     button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>'
-    button3.setAttribute("onClick","window.open('"+ str +"')");
+    button3.setAttribute("onClick","window.open('report/"+ user.substring(6, user.length-6) +"/"+  links.substring(1, links.length-1) +"')");
     var td6 = document.createElement('td');
 
     td6.append(button3);
