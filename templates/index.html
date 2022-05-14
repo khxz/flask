@@ -13,7 +13,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
+<style>
+      #hider
+    {
+        position:absolute;
+        top: 0%;
+        left: 0%;
+        width:1600px;
+        height:2000px;
+        margin-top: -800px; /*set to a negative number 1/2 of your height*/
+        margin-left: -500px; /*set to a negative number 1/2 of your width*/
+        /*
+        z- index must be lower than pop up box
+       */
+        z-index: 99;
+       background-color:Black;
+       opacity:0.6;
+    }
 
+    #popup_box  
+    {
+
+    position:absolute;
+        top: 50%;
+        left: 50%;
+        width:10em;
+        height:10em;
+        margin-top: -5em; /*set to a negative number 1/2 of your height*/
+        margin-left: -5em; /*set to a negative number 1/2 of your width*/
+        border: 1px solid #ccc;
+        border:  2px solid black;
+        z-index:100; 
+
+    }
+</style>
 <body>
 
   <div class="header">
@@ -27,14 +60,14 @@
         <div class="bar"></div>
       </a>
       <a href="#" class="link">
-        <div class="title">tweet</div>
+        <div class="title">logs</div>
         <div class="bar"></div>
       </a>
       <a href="#" class="link">
-        <div class="title">idk</div>
+        <div class="title">request</div>
         <div class="bar"></div>
       </a>
-    </div>
+    </div> 
   </div>
 
   <h2>TWEETS REPORT</h2>
@@ -111,7 +144,7 @@
         var tr = document.createElement('tr');
     
         var td = document.createElement('td');
-        td.innerHTML = foulwords;
+        td.innerHTML = foulwords.replace("[{' ","").replace("'}, {'-hahahaha, -haha, -emoji, -RT'}]","");
         
         tr.appendChild(td);
         document.getElementById("table2").appendChild(tr);
@@ -200,6 +233,26 @@
     
     }
 
+</script>
+<script>
+     $(document).ready(function () {
+        //hide hider and popup_box
+        $("#hider").hide();
+        $("#popup_box").hide();
+
+        //on click show the hider div and the message
+        $("#showpopup").click(function () {
+            $("#hider").fadeIn("slow");
+            $('#popup_box').fadeIn("slow");
+        });
+        //on click hide the message and the
+        $("#buttonClose").click(function () {
+
+            $("#hider").fadeOut("slow");
+            $('#popup_box').fadeOut("slow");
+        });
+
+        });
 </script>
     {
 

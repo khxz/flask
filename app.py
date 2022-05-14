@@ -1,13 +1,16 @@
 import os
+from unicodedata import name
 from warnings import catch_warnings
 import tweepy
 import configparser
 import pandas as pd
 import datetime
+import csv
 from flask import Flask,redirect,url_for,render_template
 from requests import request
 
 app = Flask(__name__)
+
 
 
 
@@ -48,8 +51,8 @@ def home():
     
 
     keywords = [ 
-        {'bobo, tanga, kupal, gago, tangina, pota, leche, ampota, fuck, stupid, bitch, btch'}, 
-        {'-hahahaha, -haha, -emoji, -RT'}
+        {'bobo, tanga, kupal, gago, tangina, pota, leche, ampota, fuck, stupid, bitch, btch'}
+        #,         {'-hahahaha, -haha, -emoji, -RT'}
         ]
     language = ['''tl''']
 
@@ -86,16 +89,17 @@ def tweet():
     tweet = request.form["tweet"]
     api.update_status(tweet)
     return redirect(url_for("home"))
-
+    
 @app.route("/product/<user>/<name>")
 def user(name,user):
     try:
         api.update_status("Sample Reply111", in_reply_to_status_id = name , auto_populate_reply_metadata=True)
-        return render_template('warning.html',sucess="success")  
+        return render_template('warning.html',sucess="success") 
+
     except Exception as e :
         print(e)
         return render_template('warning.html',error=e, users = user,tweets=name)  
-
+    
 @app.route("/report/<username>/<name>")
 def username(name,username):
     try:
@@ -103,8 +107,10 @@ def username(name,username):
         return render_template('report_warning.html',sucess="success")  
     except Exception as e :
         print(e)
-        return render_template('report_warning.html',error=e, users = username,tweets=name)  
-
+        return render_template('report_warning.html',error=e, users = username,tweets=name) 
+    with open("datafile.csv", 'w', newline="") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow("name,report")
 @app.route('/refresh')
 def refresh():
     return redirect(url_for("home"))
