@@ -73,9 +73,25 @@ th {
     margin-left: 32px; /* half of width */
 }
 
+.icon-btn-save {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.input-group {
+    margin-bottom:10px; 
+}
+.btn-save-label {
+    position: relative;
+    left: -12px;
+    display: inline-block;
+    padding: 6px 12px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 3px 0 0 3px;
+}
+
 .btnref {
     text-align: right;
-    margin-right: 20px;
+    margin-right: 30px;
 }
 .tablesub {
     float: left;
@@ -133,6 +149,7 @@ th {
 .fl-tablemain tr:nth-child(even), .fl-tablesub thead tr:nth-child(even) { 
     background: #F8F8F8;
 } */
+
 
 tr:hover{
     background-color:#ecf8ff;

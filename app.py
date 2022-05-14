@@ -36,7 +36,7 @@ def home():
 
     class Listener(tweepy.Stream):
         tweets = []
-        limit = 10
+        limit = 12
         def on_status(self, status):
             self.tweets.append(status)
             # print(status.user.screen_name + ": " + status.text)
