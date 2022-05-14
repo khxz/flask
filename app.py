@@ -1,6 +1,7 @@
 import os
 from unicodedata import name
 from warnings import catch_warnings
+from numpy import datetime_data
 import tweepy
 import configparser
 import pandas as pd
@@ -8,6 +9,7 @@ import datetime
 import csv
 from flask import Flask,redirect,url_for,render_template
 from requests import request
+from csv import writer
 
 app = Flask(__name__)
 
@@ -83,6 +85,7 @@ def home():
 
     return render_template("index.html", users=username,tweet=data,date=date,link=link,foulwords=foulwords)
     
+    
 @app.route('/tweet', methods=["POST","GET"])
 def tweet():
     from flask import Flask,redirect,url_for,render_template, request
@@ -102,15 +105,19 @@ def user(name,user):
     
 @app.route("/report/<username>/<name>")
 def username(name,username):
+    screenname = username
+    report_date = datetime_data
+    with open('datafile.csv', 'a', newline='') as rep:
+        rwriter = writer(rep)
+        rwriter.writerow([screenname, report_date, "report"])
+        rep.close()
     try:
         api.report_spam(screen_name = username, perform_block = False)
         return render_template('report_warning.html',sucess="success")  
     except Exception as e :
         print(e)
         return render_template('report_warning.html',error=e, users = username,tweets=name) 
-    with open("datafile.csv", 'w', newline="") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow("name,report")
+    
 @app.route('/refresh')
 def refresh():
     return redirect(url_for("home"))
