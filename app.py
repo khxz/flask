@@ -10,6 +10,7 @@ import csv
 from flask import Flask,redirect,url_for,render_template
 from requests import request
 from csv import writer
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -91,12 +92,25 @@ def tweet():
     from flask import Flask,redirect,url_for,render_template, request
     tweet = request.form["tweet"]
     api.update_status(tweet)
+
+    report_date = datetime.now()
+    with open('data/datafile.csv', 'a', newline='') as rep:
+        rwriter = writer(rep)
+        rwriter.writerow(["Cyberbot", tweet, report_date, "tweet"])
+        rep.close()
     return redirect(url_for("home"))
+
     
 @app.route("/product/<user>/<name>")
 def user(name,user):
+    screenname = user
+    report_date = datetime.now()
+    with open('data/datafile.csv', 'a', newline='') as rep:
+        rwriter = writer(rep)
+        rwriter.writerow([screenname, "twitter.com/"+screenname+"/status/"+name , report_date, "warning"])
+        rep.close()
     try:
-        api.update_status("Sample Reply111", in_reply_to_status_id = name , auto_populate_reply_metadata=True)
+        api.update_status("We would like to ask you some questions. It will only take 10 mins of your time. It will be a great help for our team if you can lend us some of your precious time. Thank you and please keep safe, To participate please click the link thanks : https://forms.gle/M15pVFTXGsUb2xAs5", in_reply_to_status_id = name , auto_populate_reply_metadata=True)
         return render_template('warning.html',sucess="success") 
 
     except Exception as e :
@@ -106,10 +120,10 @@ def user(name,user):
 @app.route("/report/<username>/<name>")
 def username(name,username):
     screenname = username
-    report_date = datetime_data
-    with open('datafile.csv', 'a', newline='') as rep:
+    report_date = datetime.now()
+    with open('data/datafile.csv', 'a', newline='') as rep:
         rwriter = writer(rep)
-        rwriter.writerow([screenname, report_date, "report"])
+        rwriter.writerow([screenname, "twitter.com/"+screenname+"/status/"+name , report_date, "report"])
         rep.close()
     try:
         api.report_spam(screen_name = username, perform_block = False)
