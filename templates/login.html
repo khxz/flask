@@ -1,34 +1,24 @@
-<!DOCTYPE html><html lang="en"></html>
-<head></head><meta charset="utf-8">
-<link rel="stylesheet" href="/static/styles/auth.css">
-<title>auth</title>
-<flask></flask>
-<body></body>
-<div class="login">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/login.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <title>LogIn</title>
+<head>
 
-</div>
-<form >
-    <label for="password">Password</label>
-    
-    <input id="password" type="password" pattern="password123" placeholder="Enter your password" required title="Wasn't your password &quot;password123&quot;? 🤫">
-    <input id="login" type="checkbox"><label class="login-button" for="login">
-        <span>Enter</span>
-        <svg>
-            <path d="M10,17V14H3V10H10V7L15,12L10,17M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V16H7V20H17V4H7V8H5V4A2,2 0 0,1 7,2Z">
+</head>
 
-            </path>
-        </svg>
-    </label>
-    <div class="padlock"><div class="padlock__hook">
-        <div class="padlock__hook-body"></div>
-        <div class="padlock__hook-body"></div>
-    </div>
-    <div class="padlock__body">
-        <div class="padlock__face">
-            <div class="padlock__eye padlock__eye--left"></div>
-            <div class="padlock__eye padlock__eye--right"></div>
-            <div class="padlock__mouth padlock__mouth--one"></div>
-            <div class="padlock__mouth padlock__mouth--two"></div>
-            <div class="padlock__mouth padlock__mouth--three"></div>
-        </div></div></div><div class="app">
-            <script> window.location.assign("http://127.0.0.1:5000") </script>
+<body>
+    <form class="login">
+        <input type="text" placeholder="Username">
+        <input type="password" placeholder="Password">
+        <button>Login</button>
+      </form>
+      
+      <a href="https://codepen.io/davinci/" target="_blank">check my other pens</a>
+</body>
+

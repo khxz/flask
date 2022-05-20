@@ -9,12 +9,20 @@ flask
 body
 
 div.login
-form(onsubmit=`return false;`)
+form(action="#" method="POST")
   label(for='password') Password
-  input#password(type='password', pattern='password123', placeholder="Enter your password", required, title="Wasn't your password \"password123\"? 🤫")
+  input#password(type='password', placeholder="Enter your password",  name = "password", required)
   input#login(type='checkbox')
-  label.login-button(for='login')
+  label.login-button(for='login' type="submit" id="submit" value="Submit")
+  {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for msg in messages %}
+                    <p>{{msg}}</p>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
     span Enter
+    
     svg
       path(d="M10,17V14H3V10H10V7L15,12L10,17M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V16H7V20H17V4H7V8H5V4A2,2 0 0,1 7,2Z")
   .padlock
@@ -28,8 +36,3 @@ form(onsubmit=`return false;`)
         .padlock__mouth.padlock__mouth--one
         .padlock__mouth.padlock__mouth--two
         .padlock__mouth.padlock__mouth--three
-  .app
-    h1 You logged in! 🎉
-    button.logout-button(type='reset') Logout
-    a.btn(href='http://127.0.0.1:5000') press
-  span.logout-message You have logged out.

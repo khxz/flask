@@ -44,6 +44,7 @@
 <body>
 
   <div class="header">
+    <br>
     <div class="logo">
       <button onclick="location.href='https://twitter.com/krxzzxxsm'">
       cyberbot</button>
@@ -58,6 +59,10 @@
         <div class="title">REQUEST</div>
         <div class="bar"></div>
       </button>
+      <button type="button" onclick="logout()">
+        <div class="title">LOGOUT</div>
+        <div class="bar"></div>
+      </button>
     </div> 
   </div>
 
@@ -65,6 +70,9 @@
   <script>
     function openLogs() {
       var myWindow = window.open("http://127.0.0.1:5501/logfiles.html", "", "titlebar=no,location=no,width=600,height=400");
+    }
+    function logout(){
+      window.open('logout')
     }
     </script>
 
@@ -213,6 +221,11 @@
   
 <br>
 <br>
+<form class="s-design-widht" method="POST" action="/tweet">
+  <div class="cardd">  
+    
+  </div>
+</form>
 
 <form class="l-design-widht" method="POST" action="/tweet">
   <div class="cardd">  
@@ -322,14 +335,24 @@
     var button2 = document.createElement('button');
     var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
     button2.innerHTML = '<i class="fa fa-inbox" aria-hidden="true" style="font-size:22px;"></i>'
-    button2.setAttribute("onClick","window.open('product/"+ user.substring(6, user.length-6) +"/"+  links.substring(1, links.length-1) +"')");
+    button2.setAttribute("onClick",'window.open("product/'+ user.substring(6, user.length-6) +'/'+  links.substring(1, links.length-1) +'");style.color="red"');
     var td5 = document.createElement('td');
+
+    function rowColor(r){
+      var i = r.parentNode.parentNode.rowIndex;
+
+    }
 
     var button3 = document.createElement('button');
     var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
     button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>'
-    button3.setAttribute("onClick","window.open('report/"+ user.substring(6, user.length-6) +"/"+  links.substring(1, links.length-1) +"')");
+    button3.setAttribute("onClick","window.open('report/"+ user.substring(6, user.length-6) +"/"+  links.substring(1, links.length-1) +"');deleteRow(this)");
     var td6 = document.createElement('td');
+
+    function deleteRow(r) {
+      var i = r.parentNode.parentNode.rowIndex;
+      document.getElementById("table1").deleteRow(i);
+    }
 
     td6.append(button3);
     td5.append(button2);

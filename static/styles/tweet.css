@@ -18,10 +18,8 @@
   color: whitesmoke;
 }
 
-.main{
-
+.link {
   display: inline-block;
-  border-bottom: 5px;
   padding: 5px 0;
   margin: 10px 10px;
   position: relative;
@@ -29,12 +27,11 @@
   text-transform: uppercase;
   color: white;
   font-weight: 200;
-  font-size: 15px; 
+  font-size: 15px;
 }
 
-
 .link .bar {
-  
+  width: 100%;
   display: inline-block;
   border-bottom: 5px solid #fab700;
   position: absolute;
@@ -113,6 +110,11 @@ mark {
 
 .l-design-widht {
   max-width: 40rem;
+  padding: 1rem;
+}
+
+.s-design-widht {
+  max-width: 20rem;
   padding: 1rem;
 }
 
