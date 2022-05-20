@@ -2,18 +2,34 @@ import os
 from unicodedata import name
 from warnings import catch_warnings
 from numpy import datetime_data
+
 import tweepy
 import configparser
 import pandas as pd
 import datetime
 import csv
-from flask import Flask,redirect,url_for,render_template
-from requests import request
+from flask import Flask,redirect,url_for,render_template,request,session,flash
+from flask_sqlalchemy import SQLAlchemy
 from csv import writer
 from datetime import datetime
 
-app = Flask(__name__)
 
+app = Flask(__name__)
+app.secret_key = "hello"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
+my_file = os.path.join(THIS_FOLDER, 'users.sqlite3.db')
+#Setting up DATABASE
+db = SQLAlchemy(app)
+
+class users(db.Model):
+    _id = db.Column("id", db.Integer, primary_key = True)
+    user_password = db.Column(db.String(100))
+
+    def __init__(self,user_password):
+        self.user_password = user_password
 
 
 
@@ -32,59 +48,86 @@ auth = tweepy.OAuthHandler(api_key, api_key_secret)
 auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
-@app.route('/')
-def home():
 
-
-
-    class Listener(tweepy.Stream):
-        tweets = []
-        limit = 12
-        def on_status(self, status):
-            self.tweets.append(status)
-            # print(status.user.screen_name + ": " + status.text)
-
-            if len(self.tweets) == self.limit:
-                self.disconnect()
-
-
-
-    stream_tweets = Listener(api_key,api_key_secret,access_token,access_token_secret)
 
     
-
-    keywords = [ 
-        {'bobo, tanga, kupal, gago, tangina, pota, leche, ampota, fuck, stupid, bitch, btch'}
-        #,         {'-hahahaha, -haha, -emoji, -RT'}
-        ]
-    language = ['''tl''']
-
-
-    stream_tweets.filter(track=keywords, languages=language)
-
-    #Data Fram
-
-    foulwords = [keywords]
-    data = []
-    username = []
-    date = []
-    link = []
-    for tweet in stream_tweets.tweets:
-        if not tweet.truncated:
-            data.append([tweet.text])
-            username.append([tweet.user.screen_name])
-            date.append([tweet.created_at])
-            link.append([tweet.id])
-            foulwords.append
-        else:
-            data.append([tweet.extended_tweet['full_text']])
-            username.append([tweet.user.screen_name])
-            date.append([tweet.created_at])
-            link.append([tweet.id])
-            foulwords.append
+@app.route('/index', methods=["POST","GET"])
+def home():
+    
         
+    if "password" in session:
+        if request.method == "POST":
+            old_pass = request.form["old_pass"]
+            new_pass = request.form["new_pass"]
+            confirm_pass = request.form["confirm_pass"]
+            found_user = users.query.filter_by(user_password=old_pass).first()
+            if new_pass != confirm_pass:
+                flash("Unmatched Password")
+                return redirect(url_for("home"))
+            else:
+                if found_user:
+                    found_user.user_password = new_pass
+                    db.session.commit()
+                    session.pop("password", None)
+                    flash("Password was Changed")
+                    return redirect(url_for("login"))
+                else:
+                    flash("Current Password is incorrect")
+                    return redirect(url_for("home"))
+        else:
+            class Listener(tweepy.Stream):
+                tweets = []
+                limit = 12
+                def on_status(self, status):
+                    self.tweets.append(status)
+                    # print(status.user.screen_name + ": " + status.text)
 
-    return render_template("index.html", users=username,tweet=data,date=date,link=link,foulwords=foulwords)
+                    if len(self.tweets) == self.limit:
+                        self.disconnect()
+
+
+
+            stream_tweets = Listener(api_key,api_key_secret,access_token,access_token_secret)
+
+            
+
+            keywords = [ 
+                {'bobo, tanga, kupal, gago, tangina, pota, leche, ampota, fuck, stupid, bitch, btch'}
+                ,         {'-hahahaha, -haha, -emoji, -RT'}
+                ]
+            language = ['''tl''']
+
+
+            stream_tweets.filter(track=keywords, languages=language)
+
+            #Data Fram
+
+            foulwords = [keywords]
+            data = []
+            username = []
+            date = []
+            link = []
+            for tweet in stream_tweets.tweets:
+                if not tweet.truncated:
+                    data.append([tweet.text])
+                    username.append([tweet.user.screen_name])
+                    date.append([tweet.created_at])
+                    link.append([tweet.id])
+                    foulwords.append
+                else:
+                    data.append([tweet.extended_tweet['full_text']])
+                    username.append([tweet.user.screen_name])
+                    date.append([tweet.created_at])
+                    link.append([tweet.id])
+                    foulwords.append
+                
+
+            return render_template("index.html", users=username,tweet=data,date=date,link=link,foulwords=foulwords)
+    else:
+        flash("You need to Login First")
+        return redirect(url_for("login"))
+
+    
     
     
 @app.route('/tweet', methods=["POST","GET"])
@@ -136,5 +179,56 @@ def username(name,username):
 def refresh():
     return redirect(url_for("home"))
 
+
+
+
+@app.route('/register', methods=["POST","GET"])
+def register():
+    if request.method == "POST":
+        password = request.form["password"]
+        found_user = users.query.filter_by(user_password=password).first()
+        if found_user:
+            found_user.user_password = password
+            db.session.commit()
+        else:
+            addusr = users(password)
+            db.session.add(addusr)
+            db.session.commit()
+        
+        
+        return redirect(url_for("login"))
+    else:
+        return render_template("register.html")
+    
+
+@app.route("/login", methods=["POST","GET"])
+def login():
+    if "password" in session:
+        return redirect(url_for("home"))
+    else:
+        if request.method == "POST":
+            password = request.form["password"]
+            found_user = users.query.filter_by(user_password=password).first()
+            if found_user:
+                session["password"] = password
+                return redirect(url_for("home"))
+            else:
+                flash("Incorrect Password")
+                return render_template("samplelogin.html")
+        else:
+            return render_template("samplelogin.html")
+
+
+
+
+@app.route("/logout")
+def logout():
+    session.pop("password", None)
+    flash("Log out sucessfully")
+    return redirect(url_for("login"))
+
+
+
 if __name__ == "__main__":
+    db.create_all()
     app.run(debug = True)

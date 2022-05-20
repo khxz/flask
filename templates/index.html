@@ -122,7 +122,7 @@
     </div>
   </div>
 </div>
-
+<form action="#" method="POST">
   <!-- The Modal -->
   <div class="modal" id="myModalreqs">
     <div class="modal-dialog">
@@ -133,41 +133,52 @@
           <h4 class="modal-title">Change Password</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-  
+        
         <!-- Modal body -->
         <div class="modal-body">
           Request Change Password
-
-        <div class="form-group">
-          <div class="input-group">
-            <div class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></div>
-            <input class="form-control" type="password" placeholder="Current Password">
+        
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></div>
+              <input class="form-control" name="old_pass" type="password" placeholder="Current Password">
+            </div>
           </div>
-        </div>
-        <div class="form-group">
-          <div class="input-group">
-            <div class="input-group-addon"><span class="glyphicon glyphicon-log-in"></span></div>
-            <input class="form-control" type="password" placeholder="New Password">
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-addon"><span class="glyphicon glyphicon-log-in"></span></div>
+              <input class="form-control" name="new_pass" type="password" placeholder="New Password">
+            </div>
           </div>
-        </div>
-        <div class="form-group">
-          <div class="input-group">
-            <div class="input-group-addon"><span class="glyphicon glyphicon-log-in"></span></div>
-            <input class="form-control" type="password" placeholder="Retype New Password">
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-addon"><span class="glyphicon glyphicon-log-in"></span></div>
+              <input class="form-control" name = "confirm_pass" type="password" placeholder="Retype New Password">
+            </div>
           </div>
-        </div>
+        
+        
 </div>
 
 
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Save</button>
+          <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Save</button>
           <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
   </div>
-
+</form>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for msg in messages %}
+                    <script>
+                      alert("{{msg}}");
+                    </script>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
   <h2>TWEETS REPORT</h2>
   <script>
       function refresh() {
@@ -233,20 +244,22 @@
         const keywords = [];
 
         "{% for x in range(3) %}"
-        keywords.push("{{ foulwords[x] }}")
+        keywords.push("{{ foulwords }}")
         "{% endfor %}"
 
-        for(var x = 0; x<3;x++){
-        var foulwords = keywords[x];     
+        var foulwords = "{{ foulwords }}";     
     
         var tr = document.createElement('tr');
-    
+        
         var td = document.createElement('td');
+        td.setAttribute("id","foulwordsz");
         td.innerHTML = foulwords.replace("[{' ","").replace("'}, {'-hahahaha, -haha, -emoji, -RT'}]","");
         
         tr.appendChild(td);
         document.getElementById("table2").appendChild(tr);
-        }
+        var x = document.getElementById('foulwordsz').innerHTML.replace("[{","").replace("}]","").replace("[","").replace("]","").replace("}, {'-hahahaha, -haha, -emoji, -RT'","");
+        document.getElementById('foulwordsz').innerHTML = x;
+
       </script>
       </tbody>
     </table>
