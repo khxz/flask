@@ -214,9 +214,9 @@ def login():
                 return redirect(url_for("home"))
             else:
                 flash("Incorrect Password")
-                return render_template("samplelogin.html")
+                return render_template("login.html")
         else:
-            return render_template("samplelogin.html")
+            return render_template("login.html")
 
 
 
