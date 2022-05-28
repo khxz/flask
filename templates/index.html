@@ -46,7 +46,7 @@
   <div class="header">
     <br>
     <div class="logo">
-      <button onclick="location.href='https://twitter.com/krxzzxxsm'">
+      <button onclick=" window.open('https://twitter.com/detector_cyber','_blank')">
       CyberDetector</button>
     </div>
     <div id="MyClockDisplay" class="clock" onload="showTime()"></div>
@@ -98,22 +98,8 @@
       //var today = dayOfWeek + " " + dayOfMonth + " of " + curMonth + ", " + curYear;
       document.getElementById("MyClockDisplay").innerText = time + "\n" + date;
       document.getElementById("MyClockDisplay").textContent = time + "\n" + date;
-      
-     
-      
+      setTimeout(showTime, 1000); 
   }showTime();
-  </script>
-
-  <script>
-    function showDate(){
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = mm + '/' + dd + '/' + yyyy;
-    document.write(today); }
-    showDate();
   </script>
 
   <script>
@@ -256,8 +242,9 @@
             <th class="col-2">USERNAME</th>
             <th class="col-3">TWEETS</th>
             <th class="col-4">VISIT</th>
-            <th class="col-5">WARNING</th>
-            <th class="col-5">REPORT</th>
+            <th class="col-5">WARN</th>
+            <th class="col-5">RPT</th>
+            <th class="col-5"> </th>
           </tr>
         </thead>
         <tbody id="tweetStream">
@@ -282,7 +269,7 @@
       <h2><svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-coffee" href="#icon-coffee" /></svg>Tweet</h2>
       <label class="input">
-        <input type="text" class="input__field" style="color:white;" name="tweet">
+        <textarea type="text" class="input__field" rows="5" cols="10"  maxlength="280" style="color:white;" name="tweet"></textarea>
         <span class="input__label">tweet something...</span>
       </label>
       <div class="button-group">
@@ -403,6 +390,12 @@
       document.getElementById("table1").deleteRow(i);
     }
 
+    var button4 = document.createElement('button');
+    button4.innerHTML = '<i class="fa fa-remove" aria-hidden="true" style="font-size:22px;"></i>'
+    button4.setAttribute("onClick","deleteRow(this)");
+    var td7 = document.createElement('td');
+
+    td7.append(button4);
     td6.append(button3);
     td5.append(button2);
     td4.append(button1);
@@ -412,6 +405,7 @@
     tr.appendChild(td4);
     tr.appendChild(td5);
     tr.appendChild(td6);
+    tr.appendChild(td7);
     document.getElementById("table1").appendChild(tr);
     
     }
