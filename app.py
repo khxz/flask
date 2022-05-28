@@ -7,6 +7,7 @@ import tweepy
 import configparser
 import pandas as pd
 import datetime
+import pytz
 import csv
 from flask import Flask,redirect,url_for,render_template,request,session,flash
 from flask_sqlalchemy import SQLAlchemy
@@ -111,13 +112,13 @@ def home():
                 if not tweet.truncated:
                     data.append([tweet.text])
                     username.append([tweet.user.screen_name])
-                    date.append([tweet.created_at])
+                    date.append([tweet.created_at.astimezone(pytz.timezone('Asia/Manila'))])
                     link.append([tweet.id])
                     foulwords.append
                 else:
                     data.append([tweet.extended_tweet['full_text']])
                     username.append([tweet.user.screen_name])
-                    date.append([tweet.created_at])
+                    date.append([tweet.created_at.astimezone(pytz.timezone('Asia/Manila'))])
                     link.append([tweet.id])
                     foulwords.append
                 
