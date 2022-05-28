@@ -155,6 +155,10 @@ tr:hover{
     background-color:#ecf8ff;
 }
 
+button:hover{
+    color:#dbdbdb;
+}
+
 .col-1{
  width:10%;
 }
@@ -236,3 +240,7 @@ tr:hover{
     top: 2px;
     box-shadow: 7px 4px 0,7px 12px 0
    } 
+
+.header{
+    color:white;
+}
