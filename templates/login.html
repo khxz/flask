@@ -1,5 +1,43 @@
-<!DOCTYPE html><html lang="en"></html><head></head><meta charset="utf-8"><link rel="stylesheet" href="/static/styles/auth.css"><title>auth</title><flask></flask><body></body><div class="form"></div><form action="#" method="POST"><label for="password">Password</label><input id="password" type="password" name="password" placeholder="Enter your password" required title="You need to log in"><input id="submit" type="submit" value="submit"><svg>            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for msg in messages %}<p>{{msg}}</p>                {% endfor %}
-              {% endif %}
-            {% endwith %}<path d="M10,17V14H3V10H10V7L15,12L10,17M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V16H7V20H17V4H7V8H5V4A2,2 0 0,1 7,2Z"></path></svg><div class="padlock"><div class="padlock__hook"><div class="padlock__hook-body"></div><div class="padlock__hook-body"></div></div><div class="padlock__body"><div class="padlock__face"><div class="padlock__eye padlock__eye--left"></div><div class="padlock__eye padlock__eye--right"></div><div class="padlock__mouth padlock__mouth--one"></div><div class="padlock__mouth padlock__mouth--two"></div><div class="padlock__mouth padlock__mouth--three"></div></div></div></div></form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    <link rel="stylesheet" href="/static/styles/auth.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="logo">
+        <img src="/static/CyberDetector (2).png" alt="">
+    </div>
+    <div class="text-center mt-4 name">
+    CYBERDETECTOR
+  </div>
+  <form action="#" method="POST" class="p-3 mt-3">
+    <div class="form-field2 d-flex align-items-center">
+          <span class="far fa-user"></span>
+          <input type="text" name="userName" id="userName" placeholder="HELLO OPERATOR!" disabled>
+    </div>
+          <div class="form-field d-flex align-items-center">
+          <span class="fas fa-key"></span>
+          <input type="password" name="password" id="pwd" placeholder="INPUT PASSWORD">
+      </div>
+      <button type="submit" class="btn mt-3" id="submit" value="Submit"> Login </button>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+            <p>{{msg}}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </form>
+
+<button type="button" data-bs-toggle="modal" data-bs-target="#myModalreqs">
+    <div class="title">forgot password?</div>
+    <div class="bar"></div>
+  </button>
+</div>
+
+</html>
