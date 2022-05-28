@@ -316,7 +316,7 @@
     var tr = document.createElement('tr');
     
     var td1 = document.createElement('td');
-    td1.innerHTML = date.replace("[datetime.datetime(","").replace(", ","-").replace(", ","-").replace(","," ").replace(", ",":").replace(", ",":").replace(", tzinfo=datetime.timezone.utc)]","");
+    td1.innerHTML = date.replace("[datetime.datetime(","").replace(", ","-").replace(", ","-").replace(","," ").replace(", ",":").replace(", ",":").replace(",","").replace("tzinfo","").replace("=","").replace("&lang","").replace("&#8220","").replace("DstTzInfo","").replace("Asia/Manila","").replace("PST","").replace("+","").replace("8:00:00","").replace(" STD","").replace("&#62","");
 
     var td2 = document.createElement('td');
     td2.innerHTML = "@"+user.substring(6, user.length-6);
