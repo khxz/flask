@@ -177,6 +177,28 @@ button:hover{
  width:5%;
 }
 
+.clock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    color: #17D4FE;
+    font-size: 15px;
+    font-family: Orbitron;
+    letter-spacing: 7px;
+}
+
+.clock2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    color: #17D4FE;
+    font-size: 20px;
+    font-family: Orbitron;
+    letter-spacing: 7px;
+}
+
 /* for custom scrollbar for webkit browser*/
 
 /* width */
