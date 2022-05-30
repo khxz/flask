@@ -2,17 +2,16 @@ import os
 from unicodedata import name
 from warnings import catch_warnings
 from numpy import datetime_data
-
+import pytz
 import tweepy
-import configparser
 import pandas as pd
 import datetime
-import pytz
 import csv
-from flask import Flask,redirect,url_for,render_template,request,session,flash
+from flask import Flask,redirect,url_for,render_template,request,session,flash,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from csv import writer
 from datetime import datetime
+
 
 
 app = Flask(__name__)
@@ -35,14 +34,14 @@ class users(db.Model):
 
 
     # read configs
-config = configparser.ConfigParser()
-config.read('config.ini')
+api_key = 'gUHn0tg6rroVfRpddz0Dt9r3w'
+api_key_secret = 'HQJKsuP7fs27VIvPMLV6r10XED45TCShpwCiWfJ1wslfoUVIu4'
 
-api_key = config['twitter']['api_key']
-api_key_secret = config['twitter']['api_key_secret']
+access_token = '703740762710609920-WlBlY29OUSplpiRQlo86hvgBMMX22Rc'
 
-access_token = config['twitter']['access_token']
-access_token_secret = config['twitter']['access_token_secret']
+access_token_secret = 'x9oiMT7LGGG1uYEnBLc6qXuYOJnT7FC3jTIuljrGoRPOK'
+
+
 
     # authentication
 auth = tweepy.OAuthHandler(api_key, api_key_secret)
@@ -50,12 +49,102 @@ auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
 
+@app.route('/logs')
+def logs():
+    filename = "data/datafile.csv"
+
+    # initializing the titles and rows list
+    fields = []
+    user = []
+    tweet_id = []
+    date = []
+    type_log = []
+
+    # reading csv file
+    with open(filename, 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
+
+        # extracting field names through first row
+        fields = next(csvreader)
+
+        # extracting each data row one by one
+        for row in csvreader:
+            user.append(row[0])
+            tweet_id.append(row[1])
+            date.append(row[2])
+            type_log.append(row[3])
+
+    return render_template("logfiles.html", users=user,tweet_id=tweet_id,date=date,type=type_log)
+
+
+
+
+
+@app.route('/')
+def home1():
+    if "password" in session:
+        return redirect(url_for("home"))
+    else:
+        return redirect(url_for("login"))
+
+
+@app.route('/newTweet',methods=["POST","GET"])
+def newTweet():
+    class Listener(tweepy.Stream):
+        tweets = []
+        
+        def on_status(self, status):
+            self.tweets.append(status)
+            texxt = status.text
+            print(status.user.screen_name + ": " + status.text)
+            
+            self.disconnect()
+        def on_error(self, status_code):
+            if status_code == 420:
+                self.disconnect()
+                return False
 
     
+    stream_tweets = Listener(api_key,api_key_secret,access_token,access_token_secret)
+    
+    
+
+    keywords = [ 
+        {'bobo, tanga, kupal, gago, tangina, pota, leche, ampota, fuck, stupid, bitch, btch'}
+        ,         {'-hahahaha, -haha, -emoji, -RT'}
+        ]
+    language = ['''tl''']
+
+
+    stream_tweets.filter(track=keywords, languages=language)
+    foulwords = [keywords]
+    data = []
+    username = []
+    date = []
+    link = []
+    for tweet in stream_tweets.tweets:
+        if not tweet.truncated:
+            data.append([tweet.text])
+            username.append([tweet.user.screen_name])
+            date.append([tweet.created_at])
+            link.append([tweet.id])
+            foulwords.append
+        else:
+            data.append([tweet.extended_tweet['full_text']])
+            username.append([tweet.user.screen_name])
+            date.append([tweet.created_at])
+            link.append([tweet.id])
+            foulwords.append
+
+    
+    return jsonify('',render_template("model.html",users=username,tweet=data,date=date,link=link))
+
+
 @app.route('/index', methods=["POST","GET"])
 def home():
-    
-        
+
+
     if "password" in session:
         if request.method == "POST":
             old_pass = request.form["old_pass"]
@@ -76,61 +165,21 @@ def home():
                     flash("Current Password is incorrect")
                     return redirect(url_for("home"))
         else:
-            class Listener(tweepy.Stream):
-                tweets = []
-                limit = 12
-                def on_status(self, status):
-                    self.tweets.append(status)
-                    # print(status.user.screen_name + ": " + status.text)
-
-                    if len(self.tweets) == self.limit:
-                        self.disconnect()
-
-
-
-            stream_tweets = Listener(api_key,api_key_secret,access_token,access_token_secret)
-
             
-
             keywords = [ 
                 {'bobo, tanga, kupal, gago, tangina, pota, leche, ampota, fuck, stupid, bitch, btch'}
                 ,         {'-hahahaha, -haha, -emoji, -RT'}
                 ]
             language = ['''tl''']
-
-
-            stream_tweets.filter(track=keywords, languages=language)
-
-            #Data Fram
-
             foulwords = [keywords]
-            data = []
-            username = []
-            date = []
-            link = []
-            for tweet in stream_tweets.tweets:
-                if not tweet.truncated:
-                    data.append([tweet.text])
-                    username.append([tweet.user.screen_name])
-                    date.append([tweet.created_at.astimezone(pytz.timezone('Asia/Manila'))])
-                    link.append([tweet.id])
-                    foulwords.append
-                else:
-                    data.append([tweet.extended_tweet['full_text']])
-                    username.append([tweet.user.screen_name])
-                    date.append([tweet.created_at.astimezone(pytz.timezone('Asia/Manila'))])
-                    link.append([tweet.id])
-                    foulwords.append
-                
-
-            return render_template("index.html", users=username,tweet=data,date=date,link=link,foulwords=foulwords)
+            return render_template("index.html", foulwords=foulwords)
     else:
         flash("You need to Login First")
         return redirect(url_for("login"))
 
-    
-    
-    
+
+
+
 @app.route('/tweet', methods=["POST","GET"])
 def tweet():
     from flask import Flask,redirect,url_for,render_template, request
@@ -144,7 +193,7 @@ def tweet():
         rep.close()
     return redirect(url_for("home"))
 
-    
+
 @app.route("/product/<user>/<name>")
 def user(name,user):
     screenname = user
@@ -155,12 +204,12 @@ def user(name,user):
         rep.close()
     try:
         api.update_status("We would like to ask you some questions. It will only take 10 mins of your time. It will be a great help for our team if you can lend us some of your precious time. Thank you and please keep safe, To participate please click the link thanks : https://forms.gle/M15pVFTXGsUb2xAs5", in_reply_to_status_id = name , auto_populate_reply_metadata=True)
-        return render_template('warning.html',sucess="success") 
+        return render_template('warning.html',sucess="success")
 
     except Exception as e :
         print(e)
-        return render_template('warning.html',error=e, users = user,tweets=name)  
-    
+        return render_template('warning.html',error=e, users = user,tweets=name)
+
 @app.route("/report/<username>/<name>")
 def username(name,username):
     screenname = username
@@ -171,11 +220,11 @@ def username(name,username):
         rep.close()
     try:
         api.report_spam(screen_name = username, perform_block = False)
-        return render_template('report_warning.html',sucess="success")  
+        return render_template('report_warning.html',sucess="success")
     except Exception as e :
         print(e)
-        return render_template('report_warning.html',error=e, users = username,tweets=name) 
-    
+        return render_template('report_warning.html',error=e, users = username,tweets=name)
+
 @app.route('/refresh')
 def refresh():
     return redirect(url_for("home"))
@@ -195,12 +244,12 @@ def register():
             addusr = users(password)
             db.session.add(addusr)
             db.session.commit()
-        
-        
+
+
         return redirect(url_for("login"))
     else:
         return render_template("register.html")
-    
+
 
 @app.route("/login", methods=["POST","GET"])
 def login():
@@ -218,30 +267,11 @@ def login():
                 return render_template("login.html")
         else:
             return render_template("login.html")
-            
-@app.route("/forgot", methods=["POST","GET"])
-def forgot():
-    if request.method == "POST":
-                secret = request.form["secretKey"]
-                key = "123"
-                password = users.query.filter(user_password=password).first()
-                passw = password
-                if secret ==  key:
-                    passw.append
-                    print(passw)
-                    flash("Your Password is  ")
-                    return render_template("forgot.html")
-                if secret !=  key:
-                    flash("wrong key")
-                    
-                    return render_template("login.html")
-                else:
-                    flash("error")
-                    return render_template("login.html")
-                    
-    else:
-        return render_template("forgot.html")
 
+
+@app.route('/log')
+def log():
+    return render_template("logfiles.html")
 
 @app.route("/logout")
 def logout():

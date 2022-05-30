@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $(function(){
+            window.setInterval(function(){
+                getTweet();
+            },10000)
+        
+        function getTweet(){
+            $.ajax({
+                url:"/newTweet",
+                type: "POST",
+                dataType: "json",
+                success: function(data){
+                    $(random_decimal).replaceWith(data);
+
+                    var user = document.getElementById("user").innerHTML;
+                    var tweet = document.getElementById("tweet").innerHTML;
+                    var date = document.getElementById("date").innerHTML;
+                    var td1 = document.createElement('td');
+                    var td2 = document.createElement('td');
+                    var td3 = document.createElement('td');
+                    td1.innerHTML = user;
+                    td2.innerHTML = tweet;
+                    td3.innerHTML = date;
+                    var tr1 = document.createElement('tr');
+                    tr1.appendChild(td1);
+                    tr1.appendChild(td2);
+                    tr1.appendChild(td3);
+                    document.getElementById("table").appendChild(tr1);
+
+                }
+
+            });
+        }
+    })
+    </script>
+    <table id="table">
+
+    </table>
+    <div id="random_decimal" style="visibility: hidden">
+            <span id="user"></span>
+            <span id="tweet"></span>
+            <span id="date"></span>
+    </div>
+</body>
+</html>

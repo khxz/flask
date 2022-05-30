@@ -104,7 +104,7 @@
 
   <script>
     function openLogs() {
-      var myWindow = window.open("http://127.0.0.1:5501/logfiles.html", "", "titlebar=no,location=no,width=820,height=400");
+      var myWindow = window.open("http://127.0.0.1:5000/logs", "", "titlebar=no,location=no,width=820,height=400");
     }
     function logout(){
       window.location.assign("/logout");
@@ -329,88 +329,93 @@
     <path fill="var(--color-accent)" d="M11.07,5.42a5.45,5.45,0,0,1,0-4.85,1,1,0,0,1,1.79.89,3.44,3.44,0,0,0,0,3.06,1,1,0,1,1-1.79.89Z"/>
   </symbol>
 </svg>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-
-  <script>
-    const tweets = [];
-    const dates = [];
-    const users = [];
-    const link = [];
-    "{% for x in range(12) %}"
-        tweets.push("{{ tweet[x] }}")
-        dates.push("{{ date[x] }}")
-        users.push("{{ users[x] }}")
-        link.push("{{ link[x] }}")
-    "{% endfor %}"
-
-    for(var x = 0; x<12;x++){
-    var tweet1 = tweets[x]; 
-    var user = users[x];
-    var date = dates[x];
-    var links = link[x];
+<script>
+    $(function(){
+        window.setInterval(function(){
+            getTweet();
+        },10000)
     
-    var tr = document.createElement('tr');
-    
-    var td1 = document.createElement('td');
-    td1.innerHTML = date.replace("[datetime.datetime(","").replace(", ","-").replace(", ","-").replace(","," ").replace(", ",":").replace(", ",":").replace(",","").replace("tzinfo","").replace("=","").replace("&lang","").replace("&#8220","").replace("DstTzInfo","").replace("Asia/Manila","").replace("PST","").replace("+","").replace("8:00:00","").replace(" STD","").replace("&#62","");
+    function getTweet(){
+        $.ajax({
+            url:"/newTweet",
+            type: "POST",
+            dataType: "json",
+            success: function(data){
+                $(random_decimal).replaceWith(data);
 
-    var td2 = document.createElement('td');
-    td2.innerHTML = "@"+user.substring(6, user.length-6);
+                var user = document.getElementById("user").innerHTML.replace("[","").replace("[","").replace("'","").replace("'","").replace("]","").replace("]","");
+                var tweet1 = document.getElementById("tweet").innerHTML.replace("[","").replace("[","").replace("'","").replace("'","").replace("]","").replace("]","");
+                var date = document.getElementById("date").innerHTML;
+                var links = document.getElementById("link").innerHTML;
+                var td1 = document.createElement('td');
+                var td2 = document.createElement('td');
+                var td3 = document.createElement('td');
+                var td4 = document.createElement('td');
+                var td5 = document.createElement('td');
+                var td6 = document.createElement('td');
+                var td7 = document.createElement('td');
+                td1.innerHTML = date.replace("[datetime.datetime(","").replace(", ","-").replace(", ","-").replace(","," ").replace(", ",":").replace(", ",":").replace(", tzinfo=datetime.timezone.utc)]","");
+                td2.innerHTML = "@"+user;
+                td3.innerHTML = tweet1;
+                
+                var button1 = document.createElement('button');
+                var str = "https://twitter.com/" + user +"/status/" + links.substring(2, links.length-2);
+                button1.innerHTML = '<i class="fa fa-twitter-square" aria-hidden="true" style="font-size:22px;"></i>'
+                button1.setAttribute("onClick","window.open('"+ str +"')");
 
-    var td3 = document.createElement('td');
-    td3.innerHTML = tweet1.substring(1, tweet1.length-2).replace("&#39","").replace("&#34","").replace(";","").replace("&#39","").replace("&#34","");
+                var button2 = document.createElement('button');
+                var str = "https://twitter.com/" + user +"/status/" + links.substring(2, links.length-2);
+                button2.innerHTML = '<i class="fa fa-inbox" aria-hidden="true" style="font-size:22px;"></i>'
+                button2.setAttribute("onClick",'window.open("product/'+ user +'/'+  links.substring(2, links.length-2) +'");style.color="red"');
 
-    var td4 = document.createElement('td');
+                function rowColor(r){
+                  var i = r.parentNode.parentNode.rowIndex;
 
-    var button1 = document.createElement('button');
-    var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
-    button1.innerHTML = '<i class="fa fa-twitter-square" aria-hidden="true" style="font-size:22px;"></i>'
-    button1.setAttribute("onClick","window.open('"+ str +"')");
-    var td4 = document.createElement('td');
+                }
 
-    var button2 = document.createElement('button');
-    var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
-    button2.innerHTML = '<i class="fa fa-inbox" aria-hidden="true" style="font-size:22px;"></i>'
-    button2.setAttribute("onClick",'window.open("product/'+ user.substring(6, user.length-6) +'/'+  links.substring(1, links.length-1) +'");style.color="red"');
-    var td5 = document.createElement('td');
+                var button3 = document.createElement('button');
+                var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(2, links.length-2);
+                button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>'
+                button3.setAttribute("onClick","window.open('report/"+ user +"/"+  links.substring(2, links.length-2) +"');deleteRow(this)");
+                
 
-    function rowColor(r){
-      var i = r.parentNode.parentNode.rowIndex;
+                function deleteRow(r) {
+                  var i = r.parentNode.parentNode.rowIndex;
+                  document.getElementById("table1").deleteRow(i);
+                }
+                var button4 = document.createElement('button');
+                button4.innerHTML = '<i class="fa fa-remove" aria-hidden="true" style="font-size:22px;"></i>'
+                button4.setAttribute("onClick","deleteRow(this)");
 
+                var tr1 = document.createElement('tr');
+                td7.append(button4);
+                td6.append(button3);
+                td5.append(button2);
+                td4.append(button1);
+                tr1.appendChild(td1);
+                tr1.appendChild(td2);
+                tr1.appendChild(td3);
+                tr1.appendChild(td4);
+                tr1.appendChild(td5);
+                tr1.appendChild(td6);
+                document.getElementById("table1").appendChild(tr1);
+
+            }
+
+        });
     }
-
-    var button3 = document.createElement('button');
-    var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(1, links.length-1);
-    button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>'
-    button3.setAttribute("onClick","window.open('report/"+ user.substring(6, user.length-6) +"/"+  links.substring(1, links.length-1) +"');deleteRow(this)");
-    var td6 = document.createElement('td');
-
-    function deleteRow(r) {
-      var i = r.parentNode.parentNode.rowIndex;
-      document.getElementById("table1").deleteRow(i);
-    }
-
-    var button4 = document.createElement('button');
-    button4.innerHTML = '<i class="fa fa-remove" aria-hidden="true" style="font-size:22px;"></i>'
-    button4.setAttribute("onClick","deleteRow(this)");
-    var td7 = document.createElement('td');
-
-    td7.append(button4);
-    td6.append(button3);
-    td5.append(button2);
-    td4.append(button1);
-    tr.appendChild(td1);
-    tr.appendChild(td2);
-    tr.appendChild(td3);
-    tr.appendChild(td4);
-    tr.appendChild(td5);
-    tr.appendChild(td6);
-    tr.appendChild(td7);
-    document.getElementById("table1").appendChild(tr);
-    
-    }
-
+})
 </script>
+<div id="random_decimal" >
+  <span id="user"></span>
+  <span id="tweet"></span>
+  <span id="date"></span>
+  <span id="link"></span>
+</div>
+
 <script>
      $(document).ready(function () {
         //hide hider and popup_box
@@ -431,7 +436,7 @@
 
         });
 </script>
-    {
+    
 
 </body>
 </html>
