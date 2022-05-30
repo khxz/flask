@@ -218,8 +218,29 @@ def login():
                 return render_template("login.html")
         else:
             return render_template("login.html")
-
-
+            
+@app.route("/forgot", methods=["POST","GET"])
+def forgot():
+    if request.method == "POST":
+                secret = request.form["secretKey"]
+                key = "123"
+                password = users.query.filter(user_password=password).first()
+                passw = password
+                if secret ==  key:
+                    passw.append
+                    print(passw)
+                    flash("Your Password is  ")
+                    return render_template("forgot.html")
+                if secret !=  key:
+                    flash("wrong key")
+                    
+                    return render_template("login.html")
+                else:
+                    flash("error")
+                    return render_template("login.html")
+                    
+    else:
+        return render_template("forgot.html")
 
 
 @app.route("/logout")
