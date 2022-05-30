@@ -380,15 +380,16 @@
                 var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(2, links.length-2);
                 button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>'
                 button3.setAttribute("onClick","window.open('report/"+ user +"/"+  links.substring(2, links.length-2) +"');deleteRow(this)");
-                
+            
+                var button4 = document.createElement('button');
+                button4.innerHTML = '<i class="fa fa-remove" aria-hidden="true" style="font-size:22px;"></i>'
+                button4.setAttribute("onClick","deleteRow(this)");
 
                 function deleteRow(r) {
                   var i = r.parentNode.parentNode.rowIndex;
                   document.getElementById("table1").deleteRow(i);
                 }
-                var button4 = document.createElement('button');
-                button4.innerHTML = '<i class="fa fa-remove" aria-hidden="true" style="font-size:22px;"></i>'
-                button4.setAttribute("onClick","deleteRow(this)");
+
 
                 var tr1 = document.createElement('tr');
                 td7.append(button4);
@@ -401,6 +402,7 @@
                 tr1.appendChild(td4);
                 tr1.appendChild(td5);
                 tr1.appendChild(td6);
+                tr1.appendChild(td7);
                 document.getElementById("table1").appendChild(tr1);
 
             }
