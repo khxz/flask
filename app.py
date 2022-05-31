@@ -1,4 +1,5 @@
 import os
+import sqlite3
 from unicodedata import name
 from warnings import catch_warnings
 from numpy import datetime_data
@@ -12,6 +13,15 @@ from flask_sqlalchemy import SQLAlchemy
 from csv import writer
 from datetime import datetime
 
+connection = sqlite3.connect("keywords.db")
+cursor = connection.cursor()
+
+
+
+questions = """CREATE TABLE IF NOT EXISTS keywords1(q_id INTEGER PRIMARY KEY AUTOINCREMENT, keyword_text text) """
+cursor.execute(questions)
+
+
 
 
 app = Flask(__name__)
@@ -23,6 +33,7 @@ THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 my_file = os.path.join(THIS_FOLDER, 'users.sqlite3.db')
 #Setting up DATABASE
 db = SQLAlchemy(app)
+
 
 class users(db.Model):
     _id = db.Column("id", db.Integer, primary_key = True)
@@ -48,6 +59,22 @@ auth = tweepy.OAuthHandler(api_key, api_key_secret)
 auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
+
+
+@app.route('/insertkey', methods=["POST","GET"])
+def insert():
+    if request.method == "POST":
+        new_keyword = request.form["keyword"]
+
+        connection = sqlite3.connect("keywords.db")
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO keywords1(keyword_text) VALUES(?)",[new_keyword])
+        connection.commit()
+    else:
+        return redirect(url_for("home"))
+    return redirect(url_for("home"))
+
+
 
 @app.route('/logs')
 def logs():
@@ -96,24 +123,25 @@ def newTweet():
         
         def on_status(self, status):
             self.tweets.append(status)
-            texxt = status.text
             print(status.user.screen_name + ": " + status.text)
-            
             self.disconnect()
-        def on_error(self, status_code):
-            if status_code == 420:
-                self.disconnect()
-                return False
+            
+
 
     
     stream_tweets = Listener(api_key,api_key_secret,access_token,access_token_secret)
     
     
+    connection = sqlite3.connect("keywords.db")
+    cursor = connection.cursor()
+    keywords = []
+    cursor.execute("Select * from keywords1")
+    results = cursor.fetchall()
+    for x in range(0,len(results)):
+        keywords.append(results[x][1])
 
-    keywords = [ 
-        {'bobo, tanga, kupal, gago, tangina, pota, leche, ampota, fuck, stupid, bitch, btch'}
-        ,         {'-hahahaha, -haha, -emoji, -RT'}
-        ]
+    language = ['''tl''']
+    
     language = ['''tl''']
 
 
@@ -143,7 +171,8 @@ def newTweet():
 
 @app.route('/index', methods=["POST","GET"])
 def home():
-
+    if request.method == "POST":
+            old_pass = request.form["old_pass"]
 
     if "password" in session:
         if request.method == "POST":
@@ -165,11 +194,14 @@ def home():
                     flash("Current Password is incorrect")
                     return redirect(url_for("home"))
         else:
-            
-            keywords = [ 
-                {'bobo, tanga, kupal, gago, tangina, pota, leche, ampota, fuck, stupid, bitch, btch'}
-                ,         {'-hahahaha, -haha, -emoji, -RT'}
-                ]
+            connection = sqlite3.connect("keywords.db")
+            cursor = connection.cursor()
+            keywords = []
+            cursor.execute("Select * from keywords1")
+            results = cursor.fetchall()
+            for x in range(0,len(results)):
+                keywords.append(results[x][1])
+
             language = ['''tl''']
             foulwords = [keywords]
             return render_template("index.html", foulwords=foulwords)
@@ -194,6 +226,7 @@ def tweet():
     return redirect(url_for("home"))
 
 
+
 @app.route("/product/<user>/<name>")
 def user(name,user):
     screenname = user
@@ -210,6 +243,8 @@ def user(name,user):
         print(e)
         return render_template('warning.html',error=e, users = user,tweets=name)
 
+
+
 @app.route("/report/<username>/<name>")
 def username(name,username):
     screenname = username
@@ -224,6 +259,8 @@ def username(name,username):
     except Exception as e :
         print(e)
         return render_template('report_warning.html',error=e, users = username,tweets=name)
+
+
 
 @app.route('/refresh')
 def refresh():
@@ -251,6 +288,7 @@ def register():
         return render_template("register.html")
 
 
+
 @app.route("/login", methods=["POST","GET"])
 def login():
     if "password" in session:
@@ -272,6 +310,8 @@ def login():
 @app.route('/log')
 def log():
     return render_template("logfiles.html")
+
+
 
 @app.route("/logout")
 def logout():

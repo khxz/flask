@@ -312,6 +312,7 @@
       </script>
       </tbody>
     </table>
+    <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal" >Add Keyword</button>
 <br>
 </div>
 </div></div>
@@ -409,13 +410,40 @@
     }
 })
 </script>
-<div id="random_decimal" >
+<div id="random_decimal" style="display: none;">
   <span id="user"></span>
   <span id="tweet"></span>
   <span id="date"></span>
   <span id="link"></span>
 </div>
 
+<!-- Modal -->
+<form action="insertkey" method="POST">
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3 row">
+              <label for="inputPassword" class="col-sm-2 col-form-label">Keyword</label>
+              <div class="col-sm-10">
+                <input type="text" name = "keyword" class="form-control" id="inputPassword">
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" name="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  </form>
 <script>
      $(document).ready(function () {
         //hide hider and popup_box
