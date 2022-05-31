@@ -204,7 +204,7 @@ def user(name,user):
         rwriter.writerow([screenname, "twitter.com/"+screenname+"/status/"+name , report_date, "warning"])
         rep.close()
     try:
-        api.update_status("We would like to ask you some questions. It will only take 10 mins of your time. It will be a great help for our team if you can lend us some of your precious time. Thank you and please keep safe, To participate please click the link thanks : https://forms.gle/M15pVFTXGsUb2xAs5", in_reply_to_status_id = name , auto_populate_reply_metadata=True)
+        api.update_status("sample reply. sorry for the inconvenience this is for my thesis project only.", in_reply_to_status_id = name , auto_populate_reply_metadata=True)
         return render_template('warning.html',sucess="success")
 
     except Exception as e :
