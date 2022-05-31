@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -138,6 +139,8 @@
         <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
         <script src="js/csv_to_html_table.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
       <script>
   
           CsvToHtmlTable.init({
@@ -263,22 +266,22 @@
   </div>
 </form>
 
-<form class="l-design-widht" method="POST" action="/tweet">
+<div class="l-design-widht">
   <div class="cardd">  
     <div class="card">
       <h2><svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-coffee" href="#icon-coffee" /></svg>Tweet</h2>
       <label class="input">
-        <textarea class="input__field" rows="10" cols="30" style="color:white;" name="tweet"></textarea>
+        <textarea class="input__field" rows="10" cols="30" style="color:white;" name="tweet" id="tweetText"></textarea>
         <span class="input__label">tweet something...</span>
       </label>
       <div class="button-group">
-        <button type="submit">Send</button>
+        <button type="submit" class = "sendTweet">Send</button>
         <button type="reset">Reset</button>
       </div>
     </div>
   </div>
-</form>
+</div>
 
   <br><br>
   <article class="l-design-widht">
@@ -330,8 +333,7 @@
     <path fill="var(--color-accent)" d="M11.07,5.42a5.45,5.45,0,0,1,0-4.85,1,1,0,0,1,1.79.89,3.44,3.44,0,0,0,0,3.06,1,1,0,1,1-1.79.89Z"/>
   </symbol>
 </svg>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
 
 <script>
     $(function(){
@@ -384,13 +386,9 @@
             
                 var button4 = document.createElement('button');
                 button4.innerHTML = '<i class="fa fa-remove" aria-hidden="true" style="font-size:22px;"></i>'
-                button4.setAttribute("onClick","deleteRow(this)");
-
-                function deleteRow(r) {
-                  var i = r.parentNode.parentNode.rowIndex;
-                  document.getElementById("table1").deleteRow(i);
-                }
-
+                button4.setAttribute("onClick","sample(this)");
+                button4.setAttribute("id","idbutton");
+                
 
                 var tr1 = document.createElement('tr');
                 td7.append(button4);
@@ -412,6 +410,50 @@
     }
 })
 </script>
+
+
+
+// --- asdasd
+<script>
+  function sample(o) {
+     //no clue what to put here?
+     var p=o.parentNode.parentNode;
+         p.parentNode.removeChild(p);
+    }
+</script>
+
+
+
+<script type="text/javascript">
+var csrftoken = $('meta[name=csrf-token]').attr('content')
+
+
+  $(document).ready(function(){
+        $('button.sendTweet').on('click',function(){
+            var text = document.getElementById("tweetText").value;
+            $.ajax({
+
+                data:{
+                    tweetTxt:text
+                },
+                type: 'POST',
+                url: '/tweet'  
+
+            })
+            .done(function(data){
+              alert("Tweet Successfully sent");
+              document.getElementById("tweetText").value = "";
+            });
+
+
+        });
+
+    });
+</script>
+
+
+
+
 <div id="random_decimal" style="display: none;">
   <span id="user"></span>
   <span id="tweet"></span>

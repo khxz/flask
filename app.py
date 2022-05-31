@@ -213,18 +213,18 @@ def home():
 
 
 
-@app.route('/tweet', methods=["POST","GET"])
+@app.route('/tweet', methods=["POST"])
 def tweet():
-    from flask import Flask,redirect,url_for,render_template, request
-    tweet = request.form["tweet"]
+    tweet = request.form["tweetTxt"]
     api.update_status(tweet)
-
     report_date = datetime.now()
     with open('data/datafile.csv', 'a', newline='') as rep:
         rwriter = writer(rep)
         rwriter.writerow(["Cyberbot", tweet, report_date, "tweet"])
         rep.close()
-    return redirect(url_for("home"))
+
+    
+    return jsonify({'name' : tweet})
 
 
 
