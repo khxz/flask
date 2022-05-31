@@ -61,54 +61,6 @@ auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
 
-
-@app.route('/insertkey', methods=["POST","GET"])
-def insert():
-    if request.method == "POST":
-        new_keyword = request.form["keyword"]
-
-        connection = sqlite3.connect("keywords.db")
-        cursor = connection.cursor()
-        cursor.execute("INSERT INTO keywords1(keyword_text) VALUES(?)",[new_keyword])
-        connection.commit()
-    else:
-        return redirect(url_for("home"))
-    return redirect(url_for("home"))
-
-
-
-@app.route('/logs')
-def logs():
-    filename = "data/datafile.csv"
-
-    # initializing the titles and rows list
-    fields = []
-    user = []
-    tweet_id = []
-    date = []
-    type_log = []
-
-    # reading csv file
-    with open(filename, 'r') as csvfile:
-        # creating a csv reader object
-        csvreader = csv.reader(csvfile)
-
-        # extracting field names through first row
-        fields = next(csvreader)
-
-        # extracting each data row one by one
-        for row in csvreader:
-            user.append(row[0])
-            tweet_id.append(row[1])
-            date.append(row[2])
-            type_log.append(row[3])
-
-    return render_template("logfiles.html", users=user,tweet_id=tweet_id,date=date,type=type_log)
-
-
-
-
-
 @app.route('/')
 def home1():
     if "password" in session:
@@ -268,6 +220,44 @@ def refresh():
     return redirect(url_for("home"))
 
 
+# LOGS ROUTE
+
+@app.route('/logs')
+def logs():
+    filename = "data/datafile.csv"
+
+    # initializing the titles and rows list
+    fields = []
+    user = []
+    tweet_id = []
+    date = []
+    type_log = []
+
+    # reading csv file
+    with open(filename, 'r') as csvfile:
+        # creating a csv reader object
+        csvreader = csv.reader(csvfile)
+
+        # extracting field names through first row
+        fields = next(csvreader)
+
+        # extracting each data row one by one
+        for row in csvreader:
+            user.append(row[0])
+            tweet_id.append(row[1])
+            date.append(row[2])
+            type_log.append(row[3])
+
+    return render_template("logfiles.html", users=user,tweet_id=tweet_id,date=date,type=type_log)
+
+
+@app.route('/log')
+def log():
+    return render_template("logfiles.html")
+
+
+
+# ACCOUNT ROUTE
 
 
 @app.route('/register', methods=["POST","GET"])
@@ -308,11 +298,6 @@ def login():
             return render_template("login.html")
 
 
-@app.route('/log')
-def log():
-    return render_template("logfiles.html")
-
-
 
 @app.route("/logout")
 def logout():
@@ -320,6 +305,47 @@ def logout():
     flash("Log out sucessfully")
     return redirect(url_for("login"))
 
+
+#KEYWORD ROUTES
+
+
+@app.route('/insertkey', methods=["POST","GET"])
+def insert():
+    if request.method == "POST":
+        new_keyword = request.form["keyword"]
+
+        connection = sqlite3.connect("keywords.db")
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO keywords1(keyword_text) VALUES(?)",[new_keyword])
+        connection.commit()
+    else:
+        return redirect(url_for("home"))
+    return redirect(url_for("home"))
+
+
+@app.route("/viewWords")
+def viewWords():
+    connection = sqlite3.connect("keywords.db")
+    cursor = connection.cursor()
+    key_id = []
+    keywords = []
+    cursor.execute("Select * from keywords1")
+    results = cursor.fetchall()
+    for x in range(0,len(results)):
+        keywords.append(results[x][1])
+        key_id.append(results[x][0])
+    return render_template("keywords.html",keywords=keywords,key_id=key_id)
+
+
+@app.route('/deleteKeyword', methods=["POST"])
+def deleteKeyword():
+    key_id = request.form["key_id"]
+    connection = sqlite3.connect("keywords.db")
+    cursor = connection.cursor()
+    cursor.execute("Delete from keywords1 where q_id = ?",[key_id])         
+    connection.commit()
+    
+    return jsonify({'name' : key_id})
 if __name__ == "__main__":
     db.create_all()
     app.run(debug = True)

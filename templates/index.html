@@ -107,6 +107,9 @@
     function openLogs() {
       var myWindow = window.open("http://127.0.0.1:5000/logs", "", "titlebar=no,location=no,width=820,height=400");
     }
+    function openKeywords() {
+      var myWindow = window.open("http://127.0.0.1:5000/viewWords", "", "titlebar=no,location=no,width=820,height=400");
+    }
     function logout(){
       window.location.assign("/logout");
     }
@@ -314,8 +317,9 @@
 
       </script>
       </tbody>
-    </table>
-    <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal" >Add Keyword</button>
+    </table><br>
+    <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#exampleModal" >Add Keyword</button><br>
+    <button type="button" class="btn btn-warning" onclick="openKeywords()">Edit Keyword</button>
 <br>
 </div>
 </div></div>
