@@ -5,6 +5,7 @@ from numpy import datetime_data
 import pytz
 import tweepy
 import pandas as pd
+import pytz
 import datetime
 import csv
 from flask import Flask,redirect,url_for,render_template,request,session,flash,jsonify
@@ -127,13 +128,13 @@ def newTweet():
         if not tweet.truncated:
             data.append([tweet.text])
             username.append([tweet.user.screen_name])
-            date.append([tweet.created_at])
+            date.append([tweet.created_at.astimezone(pytz.timezone('Asia/Manila')).replace(tzinfo=None,microsecond=0)])
             link.append([tweet.id])
             foulwords.append
         else:
             data.append([tweet.extended_tweet['full_text']])
             username.append([tweet.user.screen_name])
-            date.append([tweet.created_at])
+            date.append([tweet.created_at.astimezone(pytz.timezone('Asia/Manila')).replace(tzinfo=None,microsecond=0)])
             link.append([tweet.id])
             foulwords.append
 
