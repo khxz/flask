@@ -35,7 +35,6 @@ my_file = os.path.join(THIS_FOLDER, 'users.sqlite3.db')
 #Setting up DATABASE
 db = SQLAlchemy(app)
 
-
 class users(db.Model):
     _id = db.Column("id", db.Integer, primary_key = True)
     user_password = db.Column(db.String(100))
@@ -98,6 +97,7 @@ def newTweet():
     language = ['''tl''']
 
 
+
     stream_tweets.filter(track=keywords, languages=language)
     foulwords = [keywords]
     data = []
@@ -157,7 +157,7 @@ def home():
 
             language = ['''tl''']
             foulwords = [keywords]
-            return render_template("index.html", foulwords=foulwords)
+            return render_template("index.html", foulwords=keywords)
     else:
         flash("You need to Login First")
         return redirect(url_for("login"))
@@ -208,10 +208,10 @@ def username(name,username):
         rep.close()
     try:
         api.report_spam(screen_name = username, perform_block = False)
-        return render_template('report_warning.html',sucess="success")
+        return render_template('report_warning.html',sucess="success", users = screenname,tweets=name)
     except Exception as e :
         print(e)
-        return render_template('report_warning.html',error=e, users = username,tweets=name)
+        return render_template('report_warning.html',error=e, users = screenname,tweets=name)
 
 
 
@@ -297,7 +297,29 @@ def login():
         else:
             return render_template("login.html")
 
-
+            
+@app.route("/forgot", methods=["POST","GET"])
+def forgot():
+    if request.method == "POST":
+                secret = request.form["secretKey"]
+                key = "123"
+                password = users.query.filter_by(_id="1").first()
+                passw = password.user_password
+                if secret ==  key:
+                    #passw.append
+                    print(passw)
+                    flash("Your Password is  "+ passw)
+                    return redirect(url_for("login"))
+                if secret !=  key:
+                    flash("wrong key")
+                    
+                    return redirect(url_for("login"))
+                else:
+                    flash("error")
+                    return redirect(url_for("login"))
+                    
+    else:
+        return render_template("forgot.html")
 
 @app.route("/logout")
 def logout():

@@ -8,11 +8,15 @@
 </head>
 <body>
     <p id="error">{{error}}</p>
-    <p>USER ID: {{users}}</p> 
-    <p>TWEET ID: {{tweets}}</p> 
+    <p id="user">{{ users }}</p> 
+    <p id="link">{{ tweets }}</p> 
     <script>
+        var Link = document.getElementById("link").innerHTML;
+        var user = document.getElementById("user").innerHTML;
+
         "{% if error %}"
-            var x = document.getElementById("error").innerHTML.replace(/(\r\n|\n|\r)/gm, "")
+            var x = document.getElementById("error").innerHTML.replace(/(\r\n|\n|\r)/gm, "");
+            
             if(x == "403 Forbidden187 - Status is a duplicate."){
                 alert("You've already reported this account/tweet");
             }
@@ -24,7 +28,8 @@
             
             
         "{% else %}"
-            alert("Report Submitted to Twitter");
+            
+            alert("Successfully reprorted "+ user +" Due to his tweet ID: " + Link);
             close();
         "{% endif %}"
         

@@ -343,7 +343,7 @@
     $(function(){
         window.setInterval(function(){
             getTweet();
-        },9500)
+        },10000)
     
     function getTweet(){
         $.ajax({
@@ -364,7 +364,7 @@
                 var td5 = document.createElement('td');
                 var td6 = document.createElement('td');
                 var td7 = document.createElement('td');
-                td1.innerHTML = date.replace("[datetime.datetime(","").replace(", ","-").replace(", ","-").replace(","," ").replace(", ",":").replace(", "," ").slice(1,-5);
+                td1.innerHTML = date.replace("[datetime.datetime(","").replace(", ","-").replace(", ","-").replace(","," ").replace(", ",":").replace(", "," ").slice(1,-4);
                 td2.innerHTML = "@"+user;
                 td3.innerHTML = tweet1;
                 
@@ -386,7 +386,7 @@
                 var button3 = document.createElement('button');
                 var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(2, links.length-2);
                 button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>'
-                button3.setAttribute("onClick","window.open('report/"+ user +"/"+  links.substring(2, links.length-2) +"');deleteRow(this)");
+                button3.setAttribute("onClick","window.open('report/"+ user +"/"+  links.substring(2, links.length-2) +"');sample(this)");
             
                 var button4 = document.createElement('button');
                 button4.innerHTML = '<i class="fa fa-remove" aria-hidden="true" style="font-size:22px;"></i>'
