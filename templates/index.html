@@ -42,7 +42,7 @@
 }
 
 </style>
-<body>
+<body onload="readTweet()">
 
   <div class="header">
     <br>
@@ -241,6 +241,13 @@
   </div>
   <div class="row">
     <div class="table, columnmain, tablemain">
+
+
+      <label for="date" style="color:white; font-weight: bold;">Date:</label>
+      <input type="date" id="tweetDate" name="date" onChange="dateChange()">
+      
+
+
       <table class="fl-tablemain" id ="table1">
         <thead>
           <tr>
@@ -290,6 +297,7 @@
   <article class="l-design-widht">
   <div class="cardd">
   <div class="card">
+    
     <table class="fl-tablesub" id="table2">
       <thead>
  <th colspan="5" style="text-align:center">FOUL WORDS</th>
@@ -339,85 +347,11 @@
 </svg>
 
 
-<script>
-    $(function(){
-        window.setInterval(function(){
-            getTweet();
-        },10000)
-    
-    function getTweet(){
-        $.ajax({
-            url:"/newTweet",
-            type: "POST",
-            dataType: "json",
-            success: function(data){
-                $(random_decimal).replaceWith(data);
-
-                var user = document.getElementById("user").innerHTML.replace("[","").replace("[","").replace("'","").replace("'","").replace("]","").replace("]","");
-                var tweet1 = document.getElementById("tweet").innerHTML.replace("[","").replace("[","").replace("'","").replace("'","").replace("]","").replace("]","");
-                var date = document.getElementById("date").innerHTML;
-                var links = document.getElementById("link").innerHTML;
-                var td1 = document.createElement('td');
-                var td2 = document.createElement('td');
-                var td3 = document.createElement('td');
-                var td4 = document.createElement('td');
-                var td5 = document.createElement('td');
-                var td6 = document.createElement('td');
-                var td7 = document.createElement('td');
-                td1.innerHTML = date.replace("[datetime.datetime(","").replace(", ","-").replace(", ","-").replace(","," ").replace(", ",":").replace(", "," ").slice(1,-4);
-                td2.innerHTML = "@"+user;
-                td3.innerHTML = tweet1;
-                
-                var button1 = document.createElement('button');
-                var str = "https://twitter.com/" + user +"/status/" + links.substring(2, links.length-2);
-                button1.innerHTML = '<i class="fa fa-twitter-square" aria-hidden="true" style="font-size:22px;"></i>'
-                button1.setAttribute("onClick","window.open('"+ str +"')");
-
-                var button2 = document.createElement('button');
-                var str = "https://twitter.com/" + user +"/status/" + links.substring(2, links.length-2);
-                button2.innerHTML = '<i class="fa fa-inbox" aria-hidden="true" style="font-size:22px;"></i>'
-                button2.setAttribute("onClick",'window.open("product/'+ user +'/'+  links.substring(2, links.length-2) +'");style.color="red"');
-
-                function rowColor(r){
-                  var i = r.parentNode.parentNode.rowIndex;
-
-                }
-
-                var button3 = document.createElement('button');
-                var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(2, links.length-2);
-                button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>'
-                button3.setAttribute("onClick","window.open('report/"+ user +"/"+  links.substring(2, links.length-2) +"');sample(this)");
-            
-                var button4 = document.createElement('button');
-                button4.innerHTML = '<i class="fa fa-remove" aria-hidden="true" style="font-size:22px;"></i>'
-                button4.setAttribute("onClick","sample(this)");
-                button4.setAttribute("id","idbutton");
-                
-
-                var tr1 = document.createElement('tr');
-                td7.append(button4);
-                td6.append(button3);
-                td5.append(button2);
-                td4.append(button1);
-                tr1.appendChild(td1);
-                tr1.appendChild(td2);
-                tr1.appendChild(td3);
-                tr1.appendChild(td4);
-                tr1.appendChild(td5);
-                tr1.appendChild(td6);
-                tr1.appendChild(td7);
-                document.getElementById("table1").appendChild(tr1);
-
-            }
-
-        });
-    }
-})
-</script>
 
 
 
-// --- asdasd
+
+
 <script>
   function sample(o) {
      //no clue what to put here?
@@ -428,8 +362,32 @@
 
 
 
+<script>
+  function dateChange(){
+    var x = document.getElementById("tweetDate").value;
+    readTweet();
+    
+  }
+    $(document).ready( function() {
+      var now = new Date();
+      var month = (now.getMonth() + 1);               
+      var day = now.getDate();
+      if (month < 10) 
+          month = "0" + month;
+      if (day < 10) 
+          day = "0" + day;
+      var today = now.getFullYear() + '-' + month + '-' + day;
+      $('#tweetDate').val(today);
+  });
+</script>
+
+
+
+
 <script type="text/javascript">
 var csrftoken = $('meta[name=csrf-token]').attr('content')
+
+
 
 
   $(document).ready(function(){
@@ -452,14 +410,188 @@ var csrftoken = $('meta[name=csrf-token]').attr('content')
 
         });
 
+
+        
+
     });
+    function startReading(){
+
+      $.ajax({
+              
+              type: 'POST',
+              url: '/newTweet'
+
+              }).done(function(data){  
+                document.getElementById("checking").innerHTML = "0";
+                readTweet();
+
+                });
+               
+              
+    };
 </script>
+
+<h3 id="checking" style="color: white;">0</h3>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+  // $(function(){
+  //     window.setInterval(function(){
+  //         readTweet();
+  //     },2000)
+
+  function readTweet(){
+          var date = document.getElementById("tweetDate").value;
+          $.ajax({
+              data:{date:date},
+              type: 'POST',
+              url: '/readTweet'  
+              }).done(function(data){  
+                length = data.tweet.length
+
+
+                // CLEARING TABLE
+                var tableHeaderRowCount = 1;
+                var table = document.getElementById('table1');
+                var rowCount = table.rows.length;
+                for (var i = tableHeaderRowCount; i < rowCount; i++) {
+                    table.deleteRow(tableHeaderRowCount);
+                }
+
+
+                for(let x = 0; x < length; x++){
+
+                  // ASSIGNING DATA
+                  var user = data.id[x];
+                  var tweet1 = data.tweet[x].replace("[","").replace("'","").replace("'","").replace("]","");
+                  var date = data.date[x];
+                  var links = data.link[x];
+
+
+                  // CREATING TD
+                  var td1 = document.createElement('td');
+                  td1.innerHTML = date;
+                  td1.setAttribute('class','tweetDate');
+
+
+
+                  var td2 = document.createElement('td');
+                  td2.innerHTML = "@"+user;
+                  td2.setAttribute('class','userID');
+
+
+                  var td3 = document.createElement('td');
+                  td3.innerHTML = tweet1;
+                  td3.setAttribute('class','tweetTxt');
+
+
+
+                  var td4 = document.createElement('td');
+                  var button1 = document.createElement('button');
+                  button1.innerHTML = '<i class="fa fa-twitter-square" aria-hidden="true" style="font-size:22px;"></i>'
+                  var str = "https://twitter.com/" + user +"/status/" + links;
+                  button1.setAttribute("onClick","window.open('"+ str +"')");
+                  td4.append(button1);
+
+
+                  var td5 = document.createElement('td');
+                  var button2 = document.createElement('button');
+                  button2.setAttribute('id',links);
+                  button2.setAttribute('class',"warnBtn");
+                  button2.innerHTML = '<i class="fa fa-inbox" aria-hidden="true" style="font-size:22px;"></i>';
+                  
+                                    
+
+                  
+                  
+                  td5.append(button2);
+
+
+
+                  // CREATING TR
+                  var tr1 = document.createElement('tr');
+                  tr1.appendChild(td1);
+                  tr1.appendChild(td2);
+                  tr1.appendChild(td3);
+                  tr1.appendChild(td4);
+                  tr1.appendChild(td5);
+
+
+                  //APPENDING TO TABLE
+                  document.getElementById("table1").appendChild(tr1);
+
+                  
+
+                  
+                }
+                var check = document.getElementById("checking").innerHTML;
+                if(check == "0"){
+                  startReading();
+                  document.getElementById("checking").innerHTML = "1";
+                }
+                
+
+
+                $('.warnBtn').on('click',function(){
+                      var id = $(this).attr('id');
+                      var text = $(this).closest('tr').find('.tweetTxt').text();
+                      var user = $(this).closest('tr').find('.userID').text();
+                      var date = $(this).closest('tr').find('.tweetDate').text();
+                      
+                      
+                      
+                      $.ajax({
+                          data:{
+                              tweetTxt:text,
+                              userID:user,
+                              tweetDate: date,
+                              tweetID : id
+                          },
+                          type: 'POST',
+                          url: '/warning'  
+
+                          })
+                          .done(function(data){
+                            if(data.status == "success"){
+                              document.getElementById("warnTxt").innerHTML = "Warning Sent to user.";
+                              $("#warnModal").modal('show');
+                              readTweet();
+                              $(this).closest('tr').fadeOut(1000);
+                              
+                            }
+                            else{
+                              
+                              document.getElementById("warnTxt").innerHTML = "The tweet is not available anymore."
+                              $("#warnModal").modal('show');
+                            }
+                          
+                        });
+                      
+
+
+
+                  });
+
+
+              });
+      }
+      
+// })
+</script>
+  
+
+
+
+
+
 
 
 
 
 <div id="random_decimal" style="display: none;">
-  <span id="user"></span>
+  <button onclick='readTweet()'>Read</button>
+  <p id="user">asd</p>
   <span id="tweet"></span>
   <span id="date"></span>
   <span id="link"></span>
@@ -513,6 +645,24 @@ var csrftoken = $('meta[name=csrf-token]').attr('content')
         });
 </script>
     
+
+
+<div class="modal fade" id="warnModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              
+              <h4 class="modal-title">..</h4>
+          </div>
+          <div class="modal-body">
+              <p id="warnTxt"></p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="$('#warnModal').modal('hide')">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
 
 </body>
 </html>

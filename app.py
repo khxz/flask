@@ -1,4 +1,5 @@
 import os
+from select import select
 import sqlite3
 from unicodedata import name
 from warnings import catch_warnings
@@ -12,15 +13,42 @@ import csv
 from flask import Flask,redirect,url_for,render_template,request,session,flash,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from csv import writer
-from datetime import datetime
-
-connection = sqlite3.connect("keywords.db")
-cursor = connection.cursor()
+from datetime import datetime,date
+from textblob import TextBlob
 
 
+# connection = sqlite3.connect("keywords.db")
+# cursor = connection.cursor()
 
-questions = """CREATE TABLE IF NOT EXISTS keywords1(q_id INTEGER PRIMARY KEY AUTOINCREMENT, keyword_text text) """
-cursor.execute(questions)
+
+
+# questions = """CREATE TABLE IF NOT EXISTS keywords1(q_id INTEGER PRIMARY KEY AUTOINCREMENT, keyword_text text) """
+# cursor.execute(questions)
+
+# connection2 = sqlite3.connect("logs.db")
+# cursor2 = connection2.cursor()
+
+
+
+
+# sql1 = """DROP TABLE tweets """
+# sql1 = """CREATE TABLE IF NOT EXISTS tweets(id INTEGER PRIMARY KEY AUTOINCREMENT, tweet_text text,user_id text,tweet_date text, tweet_id text,date_only text) """
+# sql1 = ALTER TABLE tweets ADD column tweet_hour integer """
+# sql1 = """DELETE FROM tweets where id < 137  """
+# sql1 = """ UPDATE tweets set tweet_hour = 9 """
+# cursor2.execute(sql1)
+
+# connection2.commit()
+
+
+
+# sql2 = """CREATE TABLE IF NOT EXISTS warning(warn_id INTEGER PRIMARY KEY AUTOINCREMENT, tweet_text text,user_id text,tweet_date text,tweet_id text,tweet_status text,date_only text) """
+# sql2 = """ Update warning set date_only = ? """
+# sql2 = """ ALTER TABLE warning add column tweet_hour integer """
+# cursor2.execute(sql2)
+# connection2.commit()
+
+
 
 
 
@@ -68,16 +96,73 @@ def home1():
         return redirect(url_for("login"))
 
 
+@app.route('/readTweet',methods=["POST","GET"])
+def readTweet():
+    date = request.form["date"]
+    connection2 = sqlite3.connect("logs.db")
+    cursor2 = connection2.cursor()
+    cursor2.execute("Select * from tweets where date_only = ?",[date])
+    results = cursor2.fetchall()
+    tweet = []
+    id = []
+    link = []
+    date = []
+    for x in range(0,len(results)):
+        tweet.append(results[x][1])
+        id.append(results[x][2])
+        link.append(results[x][4])
+        date.append(results[x][3])
+    return jsonify({'tweet':tweet,'id':id,'link':link,'date':date})
+
+
+
 @app.route('/newTweet',methods=["POST","GET"])
 def newTweet():
+
     class Listener(tweepy.Stream):
-        tweets = []
-        
+    
         def on_status(self, status):
-            self.tweets.append(status)
-            print(status.user.screen_name + ": " + status.text)
-            self.disconnect()
-            
+
+            analysis = TextBlob(status.text)
+            if analysis.polarity < 0:
+
+                tweet_id = ""
+                user_id = ""
+                analysis = ""
+                tweet_date = ""
+                tweet_text = ""
+                
+                if hasattr(status, "retweeted_status"):  # Check if Retweet
+                    try:
+                        tweet_text= status.retweeted_status.extended_tweet["full_text"]
+                    except AttributeError:
+                        tweet_text = status.retweeted_status.text
+                else:
+                    try:
+                        tweet_text = status.extended_tweet["full_text"]
+                    except AttributeError:
+                        tweet_text = status.text 
+
+
+                tweet_date = status.created_at.astimezone(pytz.timezone('Asia/Manila')).replace(tzinfo=None,microsecond=0)
+                tweet_id = status.id
+                user_id =  status.user.screen_name
+                today = date.today()
+                date_only = today.strftime("%Y-%m-%d")
+                month_only = today.strftime("%m")
+                day_only = today.strftime("%d")
+                year_only = today.strftime("%Y")
+                hour_only = datetime.now().hour
+                print(user_id)
+                print(tweet_text)
+
+                connection2 = sqlite3.connect("logs.db")
+                cursor2 = connection2.cursor()
+                cursor2.execute("INSERT INTO tweets(tweet_text,user_id,tweet_date,tweet_id,date_only,tweet_month,tweet_day,tweet_year,tweet_hour) VALUES(?,?,?,?,?,?,?,?,?)",(tweet_text,user_id,tweet_date,tweet_id,date_only,month_only,day_only,year_only,hour_only))
+                connection2.commit()
+                    
+                self.disconnect();    
+        
 
 
     
@@ -93,33 +178,14 @@ def newTweet():
         keywords.append(results[x][1])
 
     language = ['''tl''']
-    
-    language = ['''tl''']
+
 
 
 
     stream_tweets.filter(track=keywords, languages=language)
-    foulwords = [keywords]
-    data = []
-    username = []
-    date = []
-    link = []
-    for tweet in stream_tweets.tweets:
-        if not tweet.truncated:
-            data.append([tweet.text])
-            username.append([tweet.user.screen_name])
-            date.append([tweet.created_at.astimezone(pytz.timezone('Asia/Manila')).replace(tzinfo=None,microsecond=0)])
-            link.append([tweet.id])
-            foulwords.append
-        else:
-            data.append([tweet.extended_tweet['full_text']])
-            username.append([tweet.user.screen_name])
-            date.append([tweet.created_at.astimezone(pytz.timezone('Asia/Manila')).replace(tzinfo=None,microsecond=0)])
-            link.append([tweet.id])
-            foulwords.append
 
     
-    return jsonify('',render_template("model.html",users=username,tweet=data,date=date,link=link))
+    return ''
 
 
 @app.route('/index', methods=["POST","GET"])
@@ -165,6 +231,19 @@ def home():
 
 
 
+
+@app.route('/checktweet')
+def checktweet():
+    try:
+        tweet = api.get_status('1526256077842817024')
+        print("a")
+    except Exception as e :
+        print(e)
+
+    return redirect(url_for("login"))   
+
+
+
 @app.route('/tweet', methods=["POST"])
 def tweet():
     tweet = request.form["tweetTxt"]
@@ -180,21 +259,42 @@ def tweet():
 
 
 
-@app.route("/product/<user>/<name>")
-def user(name,user):
-    screenname = user
-    report_date = datetime.now()
-    with open('data/datafile.csv', 'a', newline='') as rep:
-        rwriter = writer(rep)
-        rwriter.writerow([screenname, "twitter.com/"+screenname+"/status/"+name , report_date, "warning"])
-        rep.close()
-    try:
-        api.update_status("sample reply. sorry for the inconvenience this is for my thesis project only.", in_reply_to_status_id = name , auto_populate_reply_metadata=True)
-        return render_template('warning.html',sucess="success")
 
+
+@app.route("/warning", methods=["POST"])
+def warning():
+    tweetTxt = request.form["tweetTxt"]
+    userID = request.form["userID"]
+    date = request.form["tweetDate"]
+    tweetID = request.form["tweetID"]
+    status = "active"
+
+
+    connection = sqlite3.connect("logs.db")
+    cursor = connection.cursor()
+    cursor.execute("Select * from tweets where tweet_id = ?",([tweetID]))
+    results = cursor.fetchall()
+
+    dateofTweet = str(results[0][5])
+    monthofTweet = str(results[0][6])
+    dayofTweet = str(results[0][7])
+    yearofTweet = str(results[0][8])
+    hourofTweet = str(results[0][9])
+    try:
+        api.update_status("hello, our system noticed that your tweet/reply contains inappropriate languages that may induce or result to cyberbullying. This will serve as a warning and we advice to use proper online etiquette.", in_reply_to_status_id = tweetID , auto_populate_reply_metadata=True)
+        connection143 = sqlite3.connect("logs.db")
+        cursor123 = connection143.cursor()
+        cursor123.execute("INSERT INTO warning(tweet_text, user_id, tweet_date, tweet_id, tweet_status,date_only,tweet_month,tweet_day,tweet_year,tweet_hour) VALUES(?,?,?,?,?,?,?,?,?,?)", (tweetTxt,userID,date,tweetID,status,dateofTweet,monthofTweet,dayofTweet,yearofTweet,hourofTweet))
+        connection143.commit()
+        cursor123.execute("DELETE FROM tweets where tweet_id = ?", [tweetID])
+        connection143.commit()
+        return jsonify({'status': "success"})
     except Exception as e :
-        print(e)
-        return render_template('warning.html',error=e, users = user,tweets=name)
+        error = str(e)
+        print (error)
+        return jsonify({'status': "failed", 'error': error})
+    
+
 
 
 
