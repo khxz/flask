@@ -567,11 +567,23 @@ def checkWarned():
     return jsonify("","")
 
 
-
-
 @app.route("/reportList")
 def reportList():
     return render_template("logsWarn.html")
+
+@app.route("/warnList")
+def reportList():
+    return render_template("logsWarn.html")
+
+
+@app.route("/getAllReprt",methods=["POST"])
+def getAllWarned():
+    connection = sqlite3.connect("logs.db")
+    cursor = connection.cursor()
+    cursor.execute("select * from warning")
+    result = cursor.fetchall()
+    
+    return jsonify({"tweets":result})
 
 
 @app.route("/getAllWarned",methods=["POST"])

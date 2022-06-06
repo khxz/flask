@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASHBOARD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+    <link rel="stylesheet" href="../static/styles/nav.css">
+    <link rel="stylesheet" href="/static/styles/dashboard.css">
+
+
+</head>
+
+
+<body>
+    <div class = "row">
+        <div class="col-md-2 position-fixed">
+            <nav id="sidebar" class="position-sticky">
+            <div class="aside">
+        <p class="text logo"> CyberDetector </p>
+
+        <a href="javascript:void(0)" class="text">
+          <i class="fa fa-user-o" aria-hidden="true"></i>
+          DASHBOARD
+        </a>
+        <a href="javascript:void(0)" class="text">
+          <i class="fa fa-laptop" aria-hidden="true"></i>
+          WARNINGS
+        </a>
+        <a href="javascript:void(0)" class="text">
+          <i class="fa fa-clone" aria-hidden="true"></i>
+          REPORTED
+        </a>
+        <a href="javascript:void(0)" class="text">
+          <i class="fa fa-star-o" aria-hidden="true"></i>
+          DATA REPORT
+        </a>
+
+        <a href="javascript:void(0)" class="logout">
+            <i class="fa fa-star-o" aria-hidden="true"></i>
+            LOG OUT
+          </a>
+    </div></nav>
+</div>
+
+
+    <div class="col-md-9" style="margin-left: 10%;" id="left-cont">
+        <canvas id="myChart" width="800" height="200"></canvas>
+        <div class="row" style="margin-top:5%">
+            <div class="col-md-3" id="tweet_counter">
+                <center><h3>Today's Tweet Report</h3></center>
+                <hr style="border-style:solid ;border-width:2px; border-color:black">
+                <span class="rawTweets">No. of Raw Tweets: <span id="rawTweets"></span></span><br>
+                <span class="rawTweets">No. of Filetered Tweets: <span id="filteredTweets"></span></span>
+            </div>
+
+
+            <div class="col-md-2" id="top_list">
+                <center><h4>Most warned user.</h4></center>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col"></th>
+                        <th scope="col">User ID</th>
+                        <th scope="col">No.</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">No 1.</th>
+                        <td id="top0">Mark</td>
+                        <td id="valtop0">Otto</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">No 2.</th>
+                        <td id="top1">Jacob</td>
+                        <td id="valtop1">Thornton</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">No 3.</th>
+                        <td id="top2">Larry the Bird</td>
+                        <td id="valtop2">@twitter</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">No 4.</th>
+                        <td id="top3"></td>
+                        <td id="valtop3">@twitter</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">No 5.</th>
+                        <td id="top4">Larry the Bird</td>
+                        <td id="valtop4">@twitter</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+    
+
+
+
+</div>
+
+
+
+<script>
+$(document).ready(function(){
+    getData();
+    getTweetReport();
+    
+});
+function getData(){
+    var today = new Date();
+
+    var year = today.getFullYear();
+    var month = String(today.getMonth()+1).padStart(2, "0");
+    var day = String(today.getDate()).padStart(2, "0");
+    var date = year+"-"+month+"-"+day;
+    const dataName = ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"];
+    const dataValue = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    $.ajax({
+            
+            type: 'POST',
+            url: '/readDatabase',
+            data:{
+                date:date
+            }
+
+            }).done(function(data){  
+                var length = data.result.length
+                for(x = 0; x < length; x++){
+                    
+                    dataValue[data.result[x][0]] = parseFloat(data.result[x][1]);
+                    
+                    
+
+                }
+
+            });
+    console.log(dataName);
+    
+    console.log(dataValue);
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dataName,
+            datasets: [{
+                label: '# of Tweets',
+                data: dataValue,
+                backgroundColor: 
+                    'rgba(255, 99, 132, 0.2)'
+                    
+                ,
+                borderColor: 
+                    'rgba(255, 99, 132, 1)'
+                    
+                ,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
+    };
+
+    function getTweetReport(){
+        var today = new Date();
+
+        var year = today.getFullYear();
+        var month = String(today.getMonth()+1).padStart(2, "0");
+        var day = String(today.getDate()).padStart(2, "0");
+        var date = year+"-"+month+"-"+day;
+        $.ajax({
+            
+            type: 'POST',
+            url: '/getTweetReport',
+            data:{
+                date:date
+            }
+
+            }).done(function(data){  
+                document.getElementById("rawTweets").innerHTML = data.raw;
+                document.getElementById("filteredTweets").innerHTML = data.filtered;
+                for(x = 0 ; x < 5 ; x++){
+                    
+                    document.getElementById("top"+x).innerHTML = data.users[x][1];
+                    document.getElementById("valtop"+x).innerHTML = data.users[x][0];
+                }
+
+            });
+    }
+</script>
+</body>
+</html>
