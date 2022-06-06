@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
     <link rel="stylesheet" href="../static/styles/nav.css">
     <link rel="stylesheet" href="/static/styles/dashboard.css">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main.css') }}">
 
 </head>
 <body>
@@ -32,9 +33,9 @@
           <i class="fa fa-clone" aria-hidden="true"></i>
           REPORTED
         </a>
-        <a href="javascript:void(0)" class="text">
+        <a href="/index" class="text">
           <i class="fa fa-star-o" aria-hidden="true"></i>
-          DATA REPORT
+          STREAM
         </a>
 
         <a href="javascript:void(0)" class="logout">
@@ -45,7 +46,7 @@
 </div>
          
          <div class="col-md-9" style="margin-left: 20%;" id="left-cont">
-            <center><h3 style="margin-top: 3%;">Warned Tweets</h3></center>
+            <center><h2 style="margin-top: 3%;">Reported Users/Tweets</h2></center>
             <button type="button" class="btn btn-primary" onClick="getAllTweets()">All Tweets</button>
             <button type="button" class="btn btn-success" onclick="getAvailableWarn()">Available Tweets</button>
             <button type="button" class="btn btn-danger" onclick="getDeletedWarn()">Removed Tweets</button>
@@ -56,7 +57,6 @@
                     <th scope="col" style="width:10%">Date</th>
                     <th scope="col" style="width:10%">User ID</th>
                     <th scope="col" style="width:60%">Tweet</th>
-                    <th scope="col" style="width:10%">Status</th>
                     <th scope="col" style="width:10%">Actions</th>
                   </tr>
                 </thead>
@@ -112,8 +112,6 @@
                         var td3 = document.createElement('td');
                         td3.innerHTML = tweet;
 
-                        var td4 = document.createElement('td');
-                        td4.innerHTML = status;
 
                         var td5 = document.createElement('td');
                         var button1 = document.createElement('button');
@@ -129,7 +127,6 @@
                         tr1.appendChild(td1);
                         tr1.appendChild(td2);
                         tr1.appendChild(td3);
-                        tr1.appendChild(td4);
                         tr1.appendChild(td5);
                         document.getElementById("tableBody").appendChild(tr1);
 
@@ -159,7 +156,6 @@
                         var date = data.tweets[x][3];
                         var user = data.tweets[x][2];
                         var tweet = data.tweets[x][1];
-                        var status = data.tweets[x][5];
 
                         var links = data.tweets[x][4];
 
@@ -172,8 +168,6 @@
                         var td3 = document.createElement('td');
                         td3.innerHTML = tweet;
 
-                        var td4 = document.createElement('td');
-                        td4.innerHTML = status;
 
                         var td5 = document.createElement('td');
                         var button1 = document.createElement('button');
@@ -190,7 +184,6 @@
                         tr1.appendChild(td1);
                         tr1.appendChild(td2);
                         tr1.appendChild(td3);
-                        tr1.appendChild(td4);
                         tr1.appendChild(td5);
 
                         document.getElementById("tableBody").appendChild(tr1);
@@ -220,7 +213,6 @@
                         var date = data.tweets[x][3];
                         var user = data.tweets[x][2];
                         var tweet = data.tweets[x][1];
-                        var status = data.tweets[x][5];
                         var links = data.tweets[x][4];
 
                         var td1 = document.createElement('td');
@@ -250,7 +242,6 @@
                         tr1.appendChild(td1);
                         tr1.appendChild(td2);
                         tr1.appendChild(td3);
-                        tr1.appendChild(td4);
                         tr1.appendChild(td5);
 
                         document.getElementById("tableBody").appendChild(tr1);

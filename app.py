@@ -356,7 +356,7 @@ def username(name,username):
     except Exception as e :
         print(e)
         return render_template('report_warning.html',error=e, users = screenname,tweets=name)
-    
+
 
 
 @app.route('/refresh')
@@ -543,7 +543,7 @@ def getTweetReport():
     result2 = cursor2.fetchall()
 
     cursor3 = connection.cursor()
-    cursor3.execute("SELECT count(tweet_text) as count,user_id FROM warning WHERE NOT EXISTS(SELECT * FROM reported WHERE reported.user_id = warning.user_id)  group by user_id ORDER BY count desc")
+    cursor3.execute("select count(tweet_text) as No_Tweets, user_id from warning group by user_id ORDER BY No_Tweets DESC")
     result3 = cursor3.fetchall()
     return jsonify({"raw": result,"filtered":result2,"users":result3})
 
@@ -569,21 +569,21 @@ def checkWarned():
 
 @app.route("/reportList")
 def reportList():
-    return render_template("logsWarn.html")
+    return render_template("logsReprt.html")
 
 @app.route("/warnList")
-def reportList():
+def warnList():
     return render_template("logsWarn.html")
 
 
 @app.route("/getAllReprt",methods=["POST"])
-def getAllWarned():
+def getAllReprt():
     connection = sqlite3.connect("logs.db")
     cursor = connection.cursor()
-    cursor.execute("select * from warning")
+    cursor.execute("select * from report")
     result = cursor.fetchall()
     
-    return jsonify({"tweets":result})
+    return jsonify({"report":result})
 
 
 @app.route("/getAllWarned",methods=["POST"])
@@ -613,7 +613,6 @@ def getDeletedWarn():
     result = cursor.fetchall()
     
     return jsonify({"tweets":result})
-
 
 @app.route("/getWarnDate",methods=["POST"])
 def getWarnDate():

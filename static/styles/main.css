@@ -15,7 +15,8 @@
 body{
     font-family: helvetica;
     -webkit-font-smoothing: antialiased;
-    background: linear-gradient(-70deg, #0B0C10 30%, #1F2833 30%);
+    /* background: linear-gradient(-70deg, #0B0C10 30%, #1F2833 30%); */
+    background-color: #4B5161;
 }
 
 
@@ -25,7 +26,7 @@ h2{
     font-size: 25px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #66FCF1;
+    color: #5596DF;
     padding: 10px 0; 
 }
   
@@ -67,7 +68,7 @@ th {
     border-collapse: collapse;
     border-spacing: 0;
     width: 95%;
-    height: 500px;
+    height: 750px;
     border: 0px solid #ffffff;
     box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
     margin-left: 32px; /* half of width */
@@ -182,7 +183,7 @@ button:hover{
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-    color: #17D4FE;
+    color: #EEEEEE;
     font-size: 15px;
     font-family: Orbitron;
     letter-spacing: 7px;

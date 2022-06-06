@@ -105,7 +105,7 @@
 
   <script>
     function openLogs() {
-      var myWindow = window.open("http://127.0.0.1:5000/logs", "", "titlebar=no,location=no,width=820,height=400");
+      window.location.assign("/ourLogs");
     }
     function openKeywords() {
       var myWindow = window.open("http://127.0.0.1:5000/viewWords", "", "titlebar=no,location=no,width=820,height=400");
@@ -257,7 +257,7 @@
             <th class="col-4">VISIT</th>
             <th class="col-5">WARN</th>
             <th class="col-5">RPT</th>
-            <th class="col-5"> </th>
+            <th class="col-5">X</th>
           </tr>
         </thead>
         <tbody id="tweetStream">
@@ -270,7 +270,7 @@
   
 <br>
 <br>
-<form class="s-design-widht" method="POST" action="/tweet">
+<!-- <form class="s-design-widht" method="POST" action="/tweet">
   <div class="cardd">  
     
   </div>
@@ -331,14 +331,14 @@
 <br>
 </div>
 </div></div>
-</article>
+</article> -->
 
 
   
 <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
-  <symbol id="icon-coffee" viewBox="0 0 20 20">
+  <symbol id="icon-coffee" viewBox="0 0 20 20" style="visibility: hidden ;">
     <title>icon-coffee</title>
-    <path fill="currentColor" d="M15,17H14V9h3a3,3,0,0,1,3,3h0A5,5,0,0,1,15,17Zm1-6v3.83A3,3,0,0,0,18,12a1,1,0,0,0-1-1Z"/>
+    <path fill="currentColor" d="M15,17H14V9h3a3,3,0,0,1,3,3h0A5,5,0,0,1,15,17Zm1-6v3.83A3,3,0,0,0,18,12a1,1,0,0,0-1-1Z" />
     <rect fill="currentColor" x="1" y="7" width="15" height="12" rx="3" ry="3"/>
     <path fill="var(--color-accent)" d="M7.07,5.42a5.45,5.45,0,0,1,0-4.85,1,1,0,0,1,1.79.89,3.44,3.44,0,0,0,0,3.06,1,1,0,0,1-1.79.89Z"/>
     <path fill="var(--color-accent)" d="M3.07,5.42a5.45,5.45,0,0,1,0-4.85,1,1,0,0,1,1.79.89,3.44,3.44,0,0,0,0,3.06,1,1,0,1,1-1.79.89Z"/>
@@ -431,7 +431,7 @@ var csrftoken = $('meta[name=csrf-token]').attr('content')
     };
 </script>
 
-<h3 id="checking" style="color: white;">0</h3>
+<h3 id="checking" style="color: white; visibility: hidden;" >0</h3>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -500,13 +500,21 @@ var csrftoken = $('meta[name=csrf-token]').attr('content')
                   button2.setAttribute('id',links);
                   button2.setAttribute('class',"warnBtn");
                   button2.innerHTML = '<i class="fa fa-inbox" aria-hidden="true" style="font-size:22px;"></i>';
-                  
-                                    
-
-                  
-                  
                   td5.append(button2);
 
+                  var td6 = document.createElement('td');
+                  var button3 = document.createElement('button');
+                  var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(2, links.length-2);
+                  button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>'
+                  button3.setAttribute("onClick","window.open('report/"+ user +"/"+  links.substring(2, links.length-2) +"');deleteRow(this)");
+                  td6.append(button3);
+
+                  var td7 = document.createElement('td');
+                  var button4 = document.createElement('button');
+                  button4.innerHTML = '<i class="fa fa-remove" aria-hidden="true" style="font-size:22px;"></i>'
+                  button4.setAttribute("onClick","sample(this)");
+                  button4.setAttribute("id","idbutton");
+                  td7.append(button4);
 
 
                   // CREATING TR
@@ -516,7 +524,8 @@ var csrftoken = $('meta[name=csrf-token]').attr('content')
                   tr1.appendChild(td3);
                   tr1.appendChild(td4);
                   tr1.appendChild(td5);
-
+                  tr1.appendChild(td6);
+                  tr1.appendChild(td7);
 
                   //APPENDING TO TABLE
                   document.getElementById("table1").appendChild(tr1);
@@ -532,7 +541,7 @@ var csrftoken = $('meta[name=csrf-token]').attr('content')
                 }
                 
 
-
+                
                 $('.warnBtn').on('click',function(){
                       var id = $(this).attr('id');
                       var text = $(this).closest('tr').find('.tweetTxt').text();
@@ -581,7 +590,13 @@ var csrftoken = $('meta[name=csrf-token]').attr('content')
 </script>
   
 
-
+<script>
+  function sample(o) {
+     //no clue what to put here?
+     var p=o.parentNode.parentNode;
+         p.parentNode.removeChild(p);
+    }
+</script>
 
 
 
