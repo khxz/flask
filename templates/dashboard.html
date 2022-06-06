@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+    <style type="text/css">
+        @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+       a,
+       a:hover,
+       a:focus {
+           color: inherit;
+           text-decoration: none;
+           transition: all 0.3s;
+       }
+
+       .navbar {
+           padding: 15px 10px;
+           background: #fff;
+           border: none;
+           border-radius: 0;
+           margin-bottom: 40px;
+           box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+           height: 100vh;
+       }
+
+       .navbar-btn {
+           box-shadow: none;
+           outline: none !important;
+           border: none;
+       }
+
+       .line {
+           width: 100%;
+           height: 1px;
+           border-bottom: 1px dashed #ddd;
+           margin: 40px 0;
+       }
+       #sidebar {
+       min-width: 250px;
+       max-width: 250px;
+       background: rgb(10, 145, 207);
+       color: black;
+       transition: all 0.3s;
+       height: 100vh;
+       overflow: auto;
+       }
+
+       #sidebar.active {
+           margin-left: -250px;
+       }
+
+       #sidebar .sidebar-header {
+           padding: 20px;
+           background:rgb(10, 145, 207);;
+           color: black;
+       }
+
+       #sidebar ul.components {
+           padding: 20px 0;
+           
+       }
+
+       #sidebar ul p {
+        color: black;
+           padding: 10px;
+       }
+
+       #sidebar ul li a {
+           padding: 10px;
+           font-size: 1.1em;
+           display: block;
+           color: black;
+           font-weight: bold;
+       }
+
+       #sidebar ul li a:hover {
+           color: White;
+           background: #29B2DE;
+       }
+
+       #sidebar ul li.active>a,
+       a[aria-expanded="true"] {
+           color: #0080A9;
+           background: #E8E8E8;
+       }
+
+       a[data-toggle="collapse"] {
+           position: relative;
+       }
+
+       .dropdown-toggle::after {
+           display: block;
+           position: absolute;
+           top: 50%;
+           right: 20px;
+           transform: translateY(-50%);
+       }
+
+       ul ul a {
+           font-size: 0.9em !important;
+           padding-left: 30px !important;
+           background: #6d7fcc;
+       }
+
+       ul.CTAs {
+           padding: 20px;
+       }
+
+       ul.CTAs a {
+           text-align: center;
+           font-size: 0.9em !important;
+           display: block;
+           border-radius: 5px;
+           margin-bottom: 5px;
+       }
+
+       a.download {
+           background: #fff;
+           color: #7386D5;
+       }
+
+       a.article,
+       a.article:hover {
+           background: #6d7fcc !important;
+           color: #fff !important;
+       }
+
+       /* ---------------------------------------------------
+           CONTENT STYLE
+       ----------------------------------------------------- */
+
+       #content {
+           width: 100%;
+           padding: 20px;
+           min-height: 100vh;
+           transition: all 0.3s;
+       }
+
+       /* ---------------------------------------------------
+           MEDIAQUERIES
+       ----------------------------------------------------- */
+
+       @media (max-width: 768px) {
+           #sidebar {
+               margin-left: -250px;
+           }
+           #sidebar.active {
+               margin-left: 0;
+           }
+           #sidebarCollapse span {
+               display: none;
+           }
+       }
+       footer {
+           margin-top: 45vh;
+           height: 100px;
+           bottom: 0;
+           width: 100%;
+       }
+       #tweet_counter{
+           background: rgba(79,198,255,0.8);
+           width: 90vh;
+           height: 40vh;
+           border-radius: 2%;
+       }
+       #top_list{
+           background: rgba(79,198,255,0.8);
+           width: 53vh;
+           height: 40vh;
+           border-radius: 2%;
+           margin-left : 5%;
+       }
+       .rawTweets{
+        font-weight: bold;
+        font-size: 40px;
+       }
+       .tweetsText{
+        font-weight: bold;
+        font-size: 25px;
+        margin-bottom: 1%;
+       }
+   </style>
+</head>
+<body>
+    <div class = "row">
+       <div class="col-md-2 position-fixed">
+            <nav id="sidebar" class="position-sticky" style="">
+
+                <div class="sidebar-header">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="picture/Cavite_State_University.png" width="80px" height="80px">
+                        </div>
+                        <div class="col-md-8">
+                            <h3 style="margin-left: 2vh; color:white;">Logs</h3>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+        
+                <ul class="list-unstyled components">
+                    
+                    <li class="active">
+        
+                        <a href="//ourLogs"><img src="picture/book-alt.png" width="20px" height="20px" style="margin-right: 1vh; margin-bottom: 0.7vh;">Dashboard</a>
+                    </li>
+                    <li >
+                        <a href="/reportList"><img src="picture/users.png" width="20px" height="20px" style="margin-right: 1vh; margin-bottom: 0.7vh;">Warnings</a>
+                        
+                    </li>
+                    <li>
+                        <a href="LibrarianList.php"><img src="picture/id-badge.png" width="20px" height="20px" style="margin-right: 1vh; margin-bottom: 0.7vh;">Reported</a>
+                    </li>
+                    <li>
+                        <a href="AdminList.php"><img src="picture/package.png" width="20px" height="20px" style="margin-right: 1vh; margin-bottom: 0.7vh;">Data Report</a>
+                    </li>
+                </ul>
+                
+            </nav>
+        </div>
+        
+        <div class="col-md-9" style="margin-left: 20%;" id="left-cont">
+            <canvas id="myChart" width="800" height="200"></canvas>
+            <div class="row" style="margin-top:5%">
+                <div class="col-md-3" id="tweet_counter">
+                    <center><h3>Today's Tweet Report</h3></center>
+                    <hr style="border-style:solid ;border-width:2px; border-color:black">
+                    <span class="rawTweets">No. of Raw Tweets: <span id="rawTweets"></span></span><br>
+                    <span class="rawTweets">No. of Filetered Tweets: <span id="filteredTweets"></span></span>
+                </div>
+
+
+                <div class="col-md-2" id="top_list">
+                    <center><h4>Most warned user.</h4></center>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col"></th>
+                            <th scope="col">User ID</th>
+                            <th scope="col">No.</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">No 1.</th>
+                            <td id="top0">Mark</td>
+                            <td id="valtop0">Otto</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">No 2.</th>
+                            <td id="top1">Jacob</td>
+                            <td id="valtop1">Thornton</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">No 3.</th>
+                            <td id="top2">Larry the Bird</td>
+                            <td id="valtop2">@twitter</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">No 4.</th>
+                            <td id="top3"></td>
+                            <td id="valtop3">@twitter</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">No 5.</th>
+                            <td id="top4">Larry the Bird</td>
+                            <td id="valtop4">@twitter</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+        
+    
+    
+
+    </div>
+
+    
+
+<script>
+    $(document).ready(function(){
+        getData();
+        getTweetReport();
+        
+    });
+    function getData(){
+        var today = new Date();
+
+        var year = today.getFullYear();
+        var month = String(today.getMonth()+1).padStart(2, "0");
+        var day = String(today.getDate()).padStart(2, "0");
+        var date = year+"-"+month+"-"+day;
+        const dataName = ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"];
+        const dataValue = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        $.ajax({
+                
+                type: 'POST',
+                url: '/readDatabase',
+                data:{
+                    date:date
+                }
+
+                }).done(function(data){  
+                    var length = data.result.length
+                    for(x = 0; x < length; x++){
+                        
+                        dataValue[data.result[x][0]] = parseFloat(data.result[x][1]);
+                        
+                        
+
+                    }
+
+                });
+        console.log(dataName);
+        
+        console.log(dataValue);
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dataName,
+                datasets: [{
+                    label: '# of Tweets',
+                    data: dataValue,
+                    backgroundColor: 
+                        'rgba(255, 99, 132, 0.2)'
+                        
+                    ,
+                    borderColor: 
+                        'rgba(255, 99, 132, 1)'
+                        
+                    ,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        };
+
+        function getTweetReport(){
+            var today = new Date();
+
+            var year = today.getFullYear();
+            var month = String(today.getMonth()+1).padStart(2, "0");
+            var day = String(today.getDate()).padStart(2, "0");
+            var date = year+"-"+month+"-"+day;
+            $.ajax({
+                
+                type: 'POST',
+                url: '/getTweetReport',
+                data:{
+                    date:date
+                }
+
+                }).done(function(data){  
+                    document.getElementById("rawTweets").innerHTML = data.raw;
+                    document.getElementById("filteredTweets").innerHTML = data.filtered;
+                    for(x = 0 ; x < 5 ; x++){
+                        
+                        document.getElementById("top"+x).innerHTML = data.users[x][1];
+                        document.getElementById("valtop"+x).innerHTML = data.users[x][0];
+                    }
+
+                });
+        }
+    </script>
+</body>
+</html>

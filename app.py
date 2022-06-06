@@ -1,3 +1,5 @@
+import json
+from multiprocessing import connection
 import os
 from select import select
 import sqlite3
@@ -25,8 +27,29 @@ from textblob import TextBlob
 # questions = """CREATE TABLE IF NOT EXISTS keywords1(q_id INTEGER PRIMARY KEY AUTOINCREMENT, keyword_text text) """
 # cursor.execute(questions)
 
-# connection2 = sqlite3.connect("logs.db")
-# cursor2 = connection2.cursor()
+
+
+connection2 = sqlite3.connect("logs.db")
+cursor2 = connection2.cursor()
+
+# cursor2.execute("""CREATE TABLE IF NOT EXISTS tweet_counter (id INTEGER PRIMARY KEY AUTOINCREMENT, count_date text, no_oftweet INTEGER) """)
+
+
+
+
+# CHECKING IF TODAY's DATE ALREADY EXIST ON THE COUNTER 
+today = date.today()
+date_only = today.strftime("%Y-%m-%d")
+
+cursor2.execute("Select * from tweet_counter where count_date = ?",[date_only])
+result = cursor2.fetchall()
+
+if(len(result) == 0):
+    print("no data")
+    cursor2.execute("INSERT INTO tweet_counter(count_date,no_oftweet) values(?,?)", (date_only,0))
+    connection2.commit()
+else:
+    print("data found")
 
 
 
@@ -60,6 +83,9 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 my_file = os.path.join(THIS_FOLDER, 'users.sqlite3.db')
+
+
+
 #Setting up DATABASE
 db = SQLAlchemy(app)
 
@@ -123,6 +149,20 @@ def newTweet():
     
         def on_status(self, status):
 
+            #UPDATING THE COUNTER
+            newConnection = sqlite3.connect("logs.db")
+            newCursor = newConnection.cursor()
+
+
+
+            today = date.today()
+            date_only = today.strftime("%Y-%m-%d")
+
+            newCursor.execute("UPDATE tweet_counter set no_oftweet = no_oftweet + 1 where count_date = ?",[date_only])
+            newConnection.commit()
+
+
+            #CHECKING POLARITY
             analysis = TextBlob(status.text)
             if analysis.polarity < 0:
 
@@ -143,7 +183,7 @@ def newTweet():
                     except AttributeError:
                         tweet_text = status.text 
 
-
+                #ASSIGNING VALUE TO VARIABLES
                 tweet_date = status.created_at.astimezone(pytz.timezone('Asia/Manila')).replace(tzinfo=None,microsecond=0)
                 tweet_id = status.id
                 user_id =  status.user.screen_name
@@ -156,10 +196,14 @@ def newTweet():
                 print(user_id)
                 print(tweet_text)
 
+
+                #INSERTING VALUES TO DATABASE
+
                 connection2 = sqlite3.connect("logs.db")
                 cursor2 = connection2.cursor()
                 cursor2.execute("INSERT INTO tweets(tweet_text,user_id,tweet_date,tweet_id,date_only,tweet_month,tweet_day,tweet_year,tweet_hour) VALUES(?,?,?,?,?,?,?,?,?)",(tweet_text,user_id,tweet_date,tweet_id,date_only,month_only,day_only,year_only,hour_only))
                 connection2.commit()
+
                     
                 self.disconnect();    
         
@@ -468,6 +512,98 @@ def deleteKeyword():
     connection.commit()
     
     return jsonify({'name' : key_id})
+
+
+@app.route('/ourLogs')
+def ourLogs():
+    return render_template("dashboard.html")
+
+@app.route('/readDatabase', methods=["POST"])
+def readDatabase():
+    date = request.form["date"]
+    connection = sqlite3.connect("logs.db")
+    cursor = connection.cursor()
+    cursor.execute("select tweet_hour,COUNT(tweet_text)from tweets where date_only = ? GROUP BY tweet_hour",[date])
+    result = cursor.fetchall()
+    return jsonify({"result":result})
+
+
+
+@app.route("/getTweetReport", methods=["POST"])
+def getTweetReport():
+    date = request.form["date"]
+    connection = sqlite3.connect("logs.db")
+    cursor = connection.cursor()
+
+    cursor.execute("select no_oftweet from tweet_counter where count_date = ?", [date])
+    result = cursor.fetchall()
+
+    cursor2 = connection.cursor()
+    cursor2.execute("select COUNT(tweet_text) as No_ofTweet from tweets where date_only = ?", [date])
+    result2 = cursor2.fetchall()
+
+    cursor3 = connection.cursor()
+    cursor3.execute("select count(tweet_text) as No_Tweets, user_id from warning group by user_id ORDER BY No_Tweets DESC")
+    result3 = cursor3.fetchall()
+    return jsonify({"raw": result,"filtered":result2,"users":result3})
+
+
+@app.route("/checkWarned",methods=["POST"])
+def checkWarned():
+    connection = sqlite3.connect("logs.db")
+    cursor = connection.cursor()
+
+    cursor.execute("select * from warning")
+    result = cursor.fetchall()
+    for x in range(0,len(result)):
+        try:
+            tweet = api.get_status(result[x][4])
+            
+        except Exception as e :
+            cursor2 = connection.cursor()
+            cursor2.execute("UPDATE warning set tweet_status = 'removed' where tweet_id = ?",[result[x][4]])
+            connection.commit()
+
+    return jsonify("","")
+
+
+
+
+@app.route("/reportList")
+def reportList():
+    return render_template("logsWarn.html")
+
+
+@app.route("/getAllWarned",methods=["POST"])
+def getAllWarned():
+    connection = sqlite3.connect("logs.db")
+    cursor = connection.cursor()
+    cursor.execute("select * from warning")
+    result = cursor.fetchall()
+    
+    return jsonify({"tweets":result})
+
+@app.route("/getAvailableWarn",methods=["POST"])
+def getAvailableWarn():
+    connection = sqlite3.connect("logs.db")
+    cursor = connection.cursor()
+    cursor.execute("select * from warning where tweet_status = 'active'")
+    result = cursor.fetchall()
+    
+    return jsonify({"tweets":result})
+
+
+@app.route("/getDeletedWarn",methods=["POST"])
+def getDeletedWarn():
+    connection = sqlite3.connect("logs.db")
+    cursor = connection.cursor()
+    cursor.execute("select * from warning where tweet_status = 'removed'")
+    result = cursor.fetchall()
+    
+    return jsonify({"tweets":result})
+
+
+
 if __name__ == "__main__":
     db.create_all()
     app.run(debug = True)
