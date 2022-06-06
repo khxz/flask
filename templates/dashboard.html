@@ -49,9 +49,33 @@
 </div>
 
 
-
-        <div class="col-md-9" style="margin-left: 15%;margin-top:2%" id="left-cont">
-            <canvas style="background-color: white ;" id="myChart" width="800" height="200"></canvas>
+<script>
+    $(document).ready( function() {
+      var now = new Date();
+      var month = (now.getMonth() + 1);               
+      var day = now.getDate();
+      if (month < 10) 
+          month = "0" + month;
+      if (day < 10) 
+          day = "0" + day;
+      var today = now.getFullYear() + '-' + month + '-' + day;
+      $('#tweetDate').val(today);
+  });
+  function dateChange(){
+      
+      getData()
+  }
+</script>
+<div class="col-md-9" style="margin-left: 20%; margin-top: 3%;" id="left-cont">
+  <div class="mb-3 row" style="width: 30%;">
+      <label for="inputPassword" class="col-sm-3 col-form-label">Date :</label>
+      <div class="col-sm-7">
+      <input type="date" class="form-control" id="tweetDate" onChange="dateChange()">
+      </div>
+  </div>
+  <div class="myChart" style="background-color: #EEEEEE;">
+    <canvas id="myChart" width="800" height="200"></canvas>
+</div>
             <div class="row" style="margin-top:5%">
                 <div class="col-md-3" id="tweet_counter">
                     <center><h3>Today's Tweet Report</h3></center>
@@ -123,12 +147,7 @@
         
     });
     function getData(){
-        var today = new Date();
-
-        var year = today.getFullYear();
-        var month = String(today.getMonth()+1).padStart(2, "0");
-        var day = String(today.getDate()).padStart(2, "0");
-        var date = year+"-"+month+"-"+day;
+        var date = document.getElementById("tweetDate").value;
         const dataName = ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"];
         const dataValue = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
         $.ajax({
@@ -153,6 +172,8 @@
         console.log(dataName);
         
         console.log(dataValue);
+        $("canvas#myChart").remove();
+        $("div.myChart").append('<canvas id="myChart" width="800" height="200"></canvas>');
         const ctx = document.getElementById('myChart').getContext('2d');
         const myChart = new Chart(ctx, {
             type: 'bar',
