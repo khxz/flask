@@ -10,6 +10,47 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
     <style type="text/css">
+        #snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        bottom: 30px;
+        font-size: 17px;
+        }
+
+        #snackbar.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @-webkit-keyframes fadein {
+        from {bottom: 0; opacity: 0;} 
+        to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadein {
+        from {bottom: 0; opacity: 0;}
+        to {bottom: 30px; opacity: 1;}
+        }
+
+        @-webkit-keyframes fadeout {
+        from {bottom: 30px; opacity: 1;} 
+        to {bottom: 0; opacity: 0;}
+        }
+
+        @keyframes fadeout {
+        from {bottom: 30px; opacity: 1;}
+        to {bottom: 0; opacity: 0;}
+        }
         @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
        a,
@@ -206,12 +247,31 @@
          </div>
          
          <div class="col-md-9" style="margin-left: 20%;" id="left-cont">
-            <center><h3 style="margin-top: 3%;">Warned Tweets</h3></center>
-            <button type="button" class="btn btn-primary" onClick="getAllTweets()">All Tweets</button>
-            <button type="button" class="btn btn-success" onclick="getAvailableWarn()">Available Tweets</button>
-            <button type="button" class="btn btn-danger" onclick="getDeletedWarn()">Removed Tweets</button>
 
-            <table class="table" id = "table1"style="margin-top: 3%;">
+
+            <center><h3 style="margin-top: 3%;">Warned Tweets</h3></center>
+            <br><br>
+         
+                <div class="mb-3 row" style="width: 30%;">
+                    <label for="inputPassword" class="col-sm-3 col-form-label">Date :</label>
+                    <div class="col-sm-7">
+                    <input type="date" class="form-control" id="tweetDate" onChange="getWarnDate()">
+                    </div>
+                </div>
+                <div class="mb-3 row" style="width: 30%;">
+                    <label for="inputPassword" class="col-sm-3 col-form-label">Search :</label>
+                    <div class="col-sm-7">
+                    <input type="text" class="form-control" id="searchTweet">
+                    </div>
+                </div>
+            
+            <center>
+                <button type="button" class="btn btn-primary" onClick="getAllTweets()">All Tweets</button>
+                <button type="button" class="btn btn-success" onclick="getAvailableWarn()">Available Tweets</button>
+                <button type="button" class="btn btn-danger" onclick="getDeletedWarn()">Removed Tweets</button>
+            </center>
+            <button type="button" class="btn btn-secondary" onclick="refresh()">Refresh</button>
+            <table class="table" id = "table1"style="margin-top: 2%;">
                 <thead class="table-dark">
                   <tr>
                     <th scope="col" style="width:10%">Date</th>
@@ -225,7 +285,7 @@
                   
                 </tbody>
               </table>
-
+              
  
          </div>
          
@@ -233,17 +293,21 @@
      
  
      </div>
-
+     <span id="verify">asd</span>
 
 
 <script>
+
      $(document).ready(function(){
-        checkWarned()
         getAllTweets();
         
     });
-    function getAllTweets(){
+    function refresh(){
+        checkWarned();
         
+    }
+    function getAllTweets(){
+                document.getElementById("verify").innerHTML = "ALL";
                 var tableHeaderRowCount = 1;
                 var table = document.getElementById('table1');
                 var rowCount = table.rows.length;
@@ -303,6 +367,7 @@
 
 
         function getAvailableWarn(){
+                document.getElementById("verify").innerHTML = "AVAIL";
                 var tableHeaderRowCount = 1;
                 var table = document.getElementById('table1');
                 var rowCount = table.rows.length;
@@ -364,6 +429,7 @@
 
 
         function getDeletedWarn(){
+            document.getElementById("verify").innerHTML = "DEL"
                 var tableHeaderRowCount = 1;
                 var table = document.getElementById('table1');
                 var rowCount = table.rows.length;
@@ -428,12 +494,160 @@
                 url: '/checkWarned',
 
                 }).done(function(data){  
-                    console.log("db Checked");
+                    var x = document.getElementById("snackbar");
+                    x.className = "show";
+                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+                    getAllTweets();
 
                 });
-        }
+        };
+        function getWarnDate(){
+                var date = document.getElementById("tweetDate").value;
+                var type = document.getElementById("verify").innerHTML;
+                var tableHeaderRowCount = 1;
+                var table = document.getElementById('table1');
+                var rowCount = table.rows.length;
+                for (var i = tableHeaderRowCount; i < rowCount; i++) {
+                    table.deleteRow(tableHeaderRowCount);
+                }
+            $.ajax({
+                
+                type: 'POST',
+                url: '/getWarnDate',
+                data:{
+                    date:date,
+                    type:type
+                }
+                }).done(function(data){  
+                    var length = data.tweets.length;
+                    for(x = 0; x < length; x++){
+                        var date = data.tweets[x][3];
+                        var user = data.tweets[x][2];
+                        var tweet = data.tweets[x][1];
+                        var status = data.tweets[x][5];
+                        var links = data.tweets[x][4];
 
+                        var td1 = document.createElement('td');
+                        td1.innerHTML = date;
+
+                        var td2 = document.createElement('td');
+                        td2.innerHTML = user;
+
+                        var td3 = document.createElement('td');
+                        td3.innerHTML = tweet;
+
+                        var td4 = document.createElement('td');
+                        td4.innerHTML = status;
+
+                        var td5 = document.createElement('td');
+                        var button1 = document.createElement('button');
+                        button1.innerHTML = "Visit"
+                        var user1 = user.replace("@","")
+                        var str = "https://twitter.com/" + user +"/status/" + links;
+                        button1.setAttribute("onClick","window.open('"+ str +"')");
+                        button1.setAttribute("class","btn btn-info");
+                        td5.append(button1);
+
+
+
+                        var tr1 = document.createElement('tr');
+                        tr1.appendChild(td1);
+                        tr1.appendChild(td2);
+                        tr1.appendChild(td3);
+                        tr1.appendChild(td4);
+                        tr1.appendChild(td5);
+
+                        document.getElementById("tableBody").appendChild(tr1);
+
+
+                    }
+
+                });
+
+            
+        }
+        function getSearchData(){
+                var text = document.getElementById("searchTweet").value;
+                var tableHeaderRowCount = 1;
+                var table = document.getElementById('table1');
+                var rowCount = table.rows.length;
+                for (var i = tableHeaderRowCount; i < rowCount; i++) {
+                    table.deleteRow(tableHeaderRowCount);
+                }
+            $.ajax({
+                
+                type: 'POST',
+                url: '/getSearchData',
+                data:{
+                    text:text
+                    
+                }
+                }).done(function(data){  
+                    var length = data.tweets.length;
+                    for(x = 0; x < length; x++){
+                        var date = data.tweets[x][3];
+                        var user = data.tweets[x][2];
+                        var tweet = data.tweets[x][1];
+                        var status = data.tweets[x][5];
+                        var links = data.tweets[x][4];
+
+                        var td1 = document.createElement('td');
+                        td1.innerHTML = date;
+
+                        var td2 = document.createElement('td');
+                        td2.innerHTML = user;
+
+                        var td3 = document.createElement('td');
+                        td3.innerHTML = tweet;
+
+                        var td4 = document.createElement('td');
+                        td4.innerHTML = status;
+
+                        var td5 = document.createElement('td');
+                        var button1 = document.createElement('button');
+                        button1.innerHTML = "Visit"
+                        var user1 = user.replace("@","")
+                        var str = "https://twitter.com/" + user +"/status/" + links;
+                        button1.setAttribute("onClick","window.open('"+ str +"')");
+                        button1.setAttribute("class","btn btn-info");
+                        td5.append(button1);
+
+
+
+                        var tr1 = document.createElement('tr');
+                        tr1.appendChild(td1);
+                        tr1.appendChild(td2);
+                        tr1.appendChild(td3);
+                        tr1.appendChild(td4);
+                        tr1.appendChild(td5);
+
+                        document.getElementById("tableBody").appendChild(tr1);
+
+
+                    }
+
+                });
+
+            
+        }
+        
+
+        
+</script>
+
+
+<script>
+    var search = document.getElementById("searchTweet");
+
+    search.addEventListener("keypress", function(event) {
+  // If the user presses the "Enter" key on the keyboard
+        if (event.key === "Enter") {
+            getSearchData()
+            
+        }
+    });
 
 </script>
+<div id="snackbar">Done Verifying all warned tweets</div>
 </body>
 </html>
