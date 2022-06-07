@@ -340,21 +340,36 @@ def warning():
 
 
 
+@app.route("/deleteTweet",methods=["POST"])
+def deleteTweet():
+    tweetID = request.form["tweetID"]
+    connection143 = sqlite3.connect("logs.db")
+    cursor123 = connection143.cursor()
+    cursor123.execute("DELETE FROM tweets where tweet_id = ?", [tweetID])
+    connection143.commit()
+    return jsonify({'status': "success"})
 
-@app.route("/report/<username>/<name>")
-def username(name,username):
-    screenname = username
-    report_date = datetime.now()
-    with open('data/datafile.csv', 'a', newline='') as rep:
-        rwriter = writer(rep)
-        rwriter.writerow([screenname, "twitter.com/"+screenname+"/status/"+name , report_date, "report"])
-        rep.close()
+@app.route("/report",methods=["POST"])
+def report():
+    today = date.today()
+    date_only = today.strftime("%Y-%m-%d")
+
+    tweetTxt = request.form["tweetTxt"]
+    userID = request.form["userID"]
+    tweetID = request.form["tweetID"]
     try:
-        api.report_spam(screen_name = username, perform_block = False)
-        return render_template('report_warning.html',sucess="success", users = screenname,tweets=name)
+        api.report_spam(screen_name = userID, perform_block = False)
+        connection143 = sqlite3.connect("logs.db")
+        cursor123 = connection143.cursor()
+        cursor123.execute("INSERT INTO reported(user_id,tweet_id,tweet_text,report_date) VALUES(?,?,?,?)", (userID,tweetID,tweetTxt,date_only))
+        connection143.commit()
+        cursor123.execute("DELETE FROM tweets where tweet_id = ?", [tweetID])
+        connection143.commit()
+        return jsonify({'status': "success"})
     except Exception as e :
-        print(e)
-        return render_template('report_warning.html',error=e, users = screenname,tweets=name)
+        error = str(e)
+        print (error)
+        return jsonify({'status': "failed", 'error': error})
 
 
 
@@ -542,7 +557,7 @@ def getTweetReport():
     result2 = cursor2.fetchall()
 
     cursor3 = connection.cursor()
-    cursor3.execute("select count(tweet_text) as No_Tweets, user_id from warning group by user_id ORDER BY No_Tweets DESC")
+    cursor3.execute("SELECT count(tweet_text) as count,user_id FROM warning WHERE NOT EXISTS(SELECT * FROM reported WHERE reported.user_id = warning.user_id)  group by user_id ORDER BY count desc")
     result3 = cursor3.fetchall()
 
     cursor4 = connection.cursor()

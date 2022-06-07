@@ -504,16 +504,16 @@ var csrftoken = $('meta[name=csrf-token]').attr('content')
 
                   var td6 = document.createElement('td');
                   var button3 = document.createElement('button');
-                  var str = "https://twitter.com/" + user.substring(6, user.length-6) +"/status/" + links.substring(2, links.length-2);
-                  button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>'
-                  button3.setAttribute("onClick","window.open('report/"+ user +"/"+  links.substring(2, links.length-2) +"');deleteRow(this)");
+                  button3.innerHTML = '<i class="fa fa-warning" aria-hidden="true" style="font-size:22px;"></i>';
+                  button3.setAttribute('id',links);
+                  button3.setAttribute('class',"repBtn");
                   td6.append(button3);
 
                   var td7 = document.createElement('td');
                   var button4 = document.createElement('button');
                   button4.innerHTML = '<i class="fa fa-remove" aria-hidden="true" style="font-size:22px;"></i>'
-                  button4.setAttribute("onClick","sample(this)");
-                  button4.setAttribute("id","idbutton");
+                  button4.setAttribute('id',links);
+                  button4.setAttribute('class',"delBtn");
                   td7.append(button4);
 
 
@@ -534,11 +534,12 @@ var csrftoken = $('meta[name=csrf-token]').attr('content')
 
                   
                 }
-                var check = document.getElementById("checking").innerHTML;
-                if(check == "0"){
-                  startReading();
-                  document.getElementById("checking").innerHTML = "1";
-                }
+
+                // var check = document.getElementById("checking").innerHTML;
+                // if(check == "0"){
+                //   startReading();
+                //   document.getElementById("checking").innerHTML = "1";
+                // }
                 
 
                 
@@ -581,6 +582,77 @@ var csrftoken = $('meta[name=csrf-token]').attr('content')
 
 
                   });
+
+                  $('.repBtn').on('click',function(){
+                      var id = $(this).attr('id');
+                      var text = $(this).closest('tr').find('.tweetTxt').text();
+                      var user = $(this).closest('tr').find('.userID').text();
+                      var date = $(this).closest('tr').find('.tweetDate').text();
+                     
+                      
+                      
+                      $.ajax({
+                          data:{
+                              tweetTxt:text,
+                              userID:user,
+                              tweetDate: date,
+                              tweetID : id
+                          },
+                          type: 'POST',
+                          url: '/report'  
+
+                          })
+                          .done(function(data){
+                            if(data.status == "success"){
+                              document.getElementById("warnTxt").innerHTML = "Successfully reported the user.";
+                              $("#warnModal").modal('show');
+                              readTweet();
+                              $(this).closest('tr').fadeOut(1000);
+                              
+                            }
+                            else{
+                              
+                              document.getElementById("warnTxt").innerHTML = "The tweet is not available anymore."
+                              $("#warnModal").modal('show');
+                            }
+                          
+                        });
+                      
+
+
+
+                  });
+
+                  $('.delBtn').on('click',function(){
+                      var id = $(this).attr('id');
+                     
+                      
+                      
+                      $.ajax({
+                          data:{
+                              tweetID : id
+                          },
+                          type: 'POST',
+                          url: '/deleteTweet'  
+
+                          })
+                          .done(function(data){
+                            
+                              document.getElementById("warnTxt").innerHTML = "Tweet Deleted";
+                              $("#warnModal").modal('show');
+                              readTweet();
+                              $(this).closest('tr').fadeOut(1000);
+                              
+                          
+                          
+                        });
+                      
+
+
+
+                  });
+
+
 
 
               });

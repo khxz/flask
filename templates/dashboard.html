@@ -61,11 +61,17 @@
           day = "0" + day;
       var today = now.getFullYear() + '-' + month + '-' + day;
       $('#tweetDate').val(today);
+      zoom();
   });
   function dateChange(){
       
-      getData()
+      getData();
+      getTweetReport();
   }
+  function zoom() {
+            document.body.style.zoom = "300%";
+            document.body.style.zoom = "100%";
+        }
 </script>
 <div class="col-md-9" style="margin-left: 20%; margin-top: 3%;" id="left-cont">
   <div class="mb-3 row" style="width: 30%;">
@@ -301,7 +307,7 @@
             var year = today.getFullYear();
             var month = String(today.getMonth()+1).padStart(2, "0");
             var day = String(today.getDate()).padStart(2, "0");
-            var date = year+"-"+month+"-"+day;
+            var date = document.getElementById("tweetDate").value;
             $.ajax({
                 
                 type: 'POST',
