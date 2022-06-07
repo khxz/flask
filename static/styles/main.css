@@ -141,6 +141,7 @@ th {
     border: 1px solid #45A29E;
 }
 
+
 /* 
 .fl-tablemain thead th:nth-child(odd), .fl-tablesub thead th:nth-child(odd) {
     color: #ffffff;
@@ -177,6 +178,11 @@ button:hover{
 .col-5{
  width:5%;
 }
+
+
+.col-t{
+    width:10%;
+   }
 
 .clock {
     position: absolute;
