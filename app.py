@@ -164,7 +164,7 @@ def newTweet():
 
             #CHECKING POLARITY
             analysis = TextBlob(status.text)
-            if analysis.polarity < 0:
+            if analysis.polarity <= 0:
 
                 tweet_id = ""
                 user_id = ""
@@ -573,6 +573,19 @@ def checkWarned():
 @app.route("/reportList")
 def reportList():
     return render_template("logsReprt.html")
+
+@app.route("/keywordsList")
+def keywordsList():
+    connection = sqlite3.connect("keywords.db")
+    cursor = connection.cursor()
+    key_id = []
+    keywords = []
+    cursor.execute("Select * from keywords1")
+    results = cursor.fetchall()
+    for x in range(0,len(results)):
+        keywords.append(results[x][1])
+        key_id.append(results[x][0])
+    return render_template("logsKeywords.html",keywords=keywords,key_id=key_id)
 
 @app.route("/warnList")
 def warnList():

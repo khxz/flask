@@ -10,9 +10,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
     <link rel="stylesheet" href="../static/styles/nav.css">
+    <link rel="stylesheet" href="../static/styles/button.css">
     <link rel="stylesheet" href="/static/styles/dashboard.css">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main.css') }}">
-
     <style type="text/css">
         #snackbar {
         visibility: hidden;
@@ -56,6 +56,7 @@
         to {bottom: 0; opacity: 0;}
         }
 </style>
+
 </head>
 <body>
    
@@ -76,6 +77,10 @@
           <i class="fa fa-clone" aria-hidden="true"></i>
           REPORTED
         </a>
+        <a href="/keywordsList" class="text">
+            <i class="fa fa-clone" aria-hidden="true"></i>
+            KEYWORDS
+          </a>
         <a href="/index" class="text">
           <i class="fa fa-star-o" aria-hidden="true"></i>
           STREAM
@@ -106,20 +111,23 @@
                     </div>
                 </div>
             
-            <center>
-                <button type="button" class="btn btn-primary" onClick="getAllTweets()">All Tweets</button>
-                <button type="button" class="btn btn-success" onclick="getAvailableWarn()">Available Tweets</button>
-                <button type="button" class="btn btn-danger" onclick="getDeletedWarn()">Removed Tweets</button>
+            <center class="buttons">
+                <button type="button" class="custom-btn btn-5" onClick="getAllTweets()">All Tweets</button>
+                <button type="button" class="custom-btn btn-5 btn-5avail" onclick="getAvailableWarn()">Available Tweets</button>
+                <button type="button" class="custom-btn btn-5 btn-5remv" onclick="getDeletedWarn()">Removed Tweets</button>
             </center>
+
+
+
             <button type="button" class="btn btn-secondary" onclick="refresh()">Refresh</button>
-            <table class="table" id = "table1"style="margin-top: 2% ; background-color: white;">
+            <table class="table" id="table2" style="background-color: #e0e5ec; table-layout: fixed; ">
                 <thead class="table-dark">
                   <tr>
-                    <th scope="col" style="width:10%">Date</th>
-                    <th scope="col" style="width:10%">User ID</th>
-                    <th scope="col" style="width:60%">Tweet</th>
-                    <th scope="col" style="width:10%">Status</th>
-                    <th scope="col" style="width:10%">Actions</th>
+                    <th scope="col" style="width:10%;word-wrap: break-word;">Date</th>
+                    <th scope="col" style="width:10%;word-wrap: break-word;">User ID</th>
+                    <th scope="col" style="width:60%;word-wrap: break-word;">Tweet</th>
+                    <th scope="col" style="width:10%;word-wrap: break-word;">Status</th>
+                    <th scope="col" style="width:10%;word-wrap: break-word;">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -150,7 +158,7 @@
     function getAllTweets(){
                 document.getElementById("verify").innerHTML = "ALL";
                 var tableHeaderRowCount = 1;
-                var table = document.getElementById('table1');
+                var table = document.getElementById('table2');
                 var rowCount = table.rows.length;
                 for (var i = tableHeaderRowCount; i < rowCount; i++) {
                     table.deleteRow(tableHeaderRowCount);
@@ -210,7 +218,7 @@
         function getAvailableWarn(){
             document.getElementById("verify").innerHTML = "AVAIL";
                 var tableHeaderRowCount = 1;
-                var table = document.getElementById('table1');
+                var table = document.getElementById('table2');
                 var rowCount = table.rows.length;
                 for (var i = tableHeaderRowCount; i < rowCount; i++) {
                     table.deleteRow(tableHeaderRowCount);
@@ -272,7 +280,7 @@
         function getDeletedWarn(){
             document.getElementById("verify").innerHTML = "DEL";
                 var tableHeaderRowCount = 1;
-                var table = document.getElementById('table1');
+                var table = document.getElementById('table2');
                 var rowCount = table.rows.length;
                 for (var i = tableHeaderRowCount; i < rowCount; i++) {
                     table.deleteRow(tableHeaderRowCount);
@@ -348,7 +356,7 @@
                 var date = document.getElementById("tweetDate").value;
                 var type = document.getElementById("verify").innerHTML;
                 var tableHeaderRowCount = 1;
-                var table = document.getElementById('table1');
+                var table = document.getElementById('table2');
                 var rowCount = table.rows.length;
                 for (var i = tableHeaderRowCount; i < rowCount; i++) {
                     table.deleteRow(tableHeaderRowCount);
@@ -412,7 +420,7 @@
         function getSearchData(){
                 var text = document.getElementById("searchTweet").value;
                 var tableHeaderRowCount = 1;
-                var table = document.getElementById('table1');
+                var table = document.getElementById('table2');
                 var rowCount = table.rows.length;
                 for (var i = tableHeaderRowCount; i < rowCount; i++) {
                     table.deleteRow(tableHeaderRowCount);
