@@ -290,19 +290,18 @@ def checktweet():
 
 @app.route('/tweet', methods=["POST"])
 def tweet():
-    tweet = request.form["tweetTxt"]
-    api.update_status(tweet)
-    report_date = datetime.now()
-    with open('data/datafile.csv', 'a', newline='') as rep:
-        rwriter = writer(rep)
-        rwriter.writerow(["Cyberbot", tweet, report_date, "tweet"])
-        rep.close()
+    try:
+        tweet = request.form["tweetTxt"]
+        api.update_status(tweet)
+    # report_date = datetime.now()
+    # with open('data/datafile.csv', 'a', newline='') as rep:
+    #     rwriter = writer(rep)
+    #     rwriter.writerow(["Cyberbot", tweet, report_date, "tweet"])
+    #     rep.close()
+    except Exception as e:
+        print(e)
 
-    
-    return jsonify({'name' : tweet})
-
-
-
+    return redirect(url_for("ourLogs"))
 
 
 @app.route("/warning", methods=["POST"])
@@ -545,7 +544,11 @@ def getTweetReport():
     cursor3 = connection.cursor()
     cursor3.execute("select count(tweet_text) as No_Tweets, user_id from warning group by user_id ORDER BY No_Tweets DESC")
     result3 = cursor3.fetchall()
-    return jsonify({"raw": result,"filtered":result2,"users":result3})
+
+    cursor4 = connection.cursor()
+    cursor4.execute("select COUNT(tweet_text) as No_ofwarn from warning where date_only = ?", [date])
+    result4 = cursor4.fetchall()
+    return jsonify({"raw": result,"filtered":result2,"users":result3,"warn":result4})
 
 
 @app.route("/checkWarned",methods=["POST"])

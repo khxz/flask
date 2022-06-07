@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/tweet.css') }}">
     <link rel="stylesheet" href="../static/styles/nav.css">
     <link rel="stylesheet" href="/static/styles/dashboard.css">
     
@@ -24,8 +25,8 @@
             <div class="aside">
         <p class="text logo"> CyberDetector </p>
 
-        <a href="/ourLogs" class="text">
-          <i class="fa fa-user-o" aria-hidden="true"></i>
+        <a href="/ourLogs" class="text active">
+          <i class="fa fa-user-o active" aria-hidden="true"></i>
           DASHBOARD
         </a>
         <a href="/warnList" class="text">
@@ -74,19 +75,66 @@
       </div>
   </div>
   <div class="myChart" style="background-color: #EEEEEE;">
-    <canvas id="myChart" width="800" height="200"></canvas>
+    <canvas id="myChart" width="900" height="200"></canvas>
 </div>
             <div class="row" style="margin-top:5%">
-                <div class="col-md-3" id="tweet_counter">
-                    <center><h3>Today's Tweet Report</h3></center>
+                <div class="col-md-4" id="tweet_counter">
+                    <center><h4>Today's Tweet Report</h4></center>
                     <hr style="border-style:solid ;border-width:2px; border-color:black">
-                    <span class="rawTweets">No. of Raw Tweets: <span id="rawTweets"></span></span><br>
-                    <span class="rawTweets">No. of Filetered Tweets: <span id="filteredTweets"></span></span>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="Collected Data"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">No. of Raw Tweets:</th>
+                                <td id="rawTweets"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">No. of Filetered Tweets:</th>
+                                <td id="filteredTweets"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Percentage of filtered Tweets</th>
+                                <td id="filtered_percent"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">No. of Warned Tweets</th>
+                                <td id="warnedTweets"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">No. of Reported Tweets</th>
+                                <td id="reportedTweets"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
                 </div>
-
+                    
+                <div class="col-md-3" id="tweetingS">
+                <form method="POST" action="/tweet">
+                    <div class="cardd">  
+                      <div class="card">
+                        <center><h4 style="color: white;">TWEET</h4></center>
+                        <hr style="border-style:solid ;border-width:2px; border-color:black">
+                        <label class="input">
+                          <textarea class="input__field" rows="10" cols="30" style="color:white;" name="tweet" id="tweetText"></textarea>
+                          <span class="input__label">tweet something...</span>
+                        </label>
+                        <div class="button-group">
+                          <button type="submit" class = "sendTweet">Send</button>
+                          <button type="reset">Reset</button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
 
                 <div class="col-md-2" id="top_list">
                     <center><h4>Most warned user.</h4></center>
+                    <hr style="border-style:solid ;border-width:2px; border-color:black">
                     <table class="table">
                         <thead>
                           <tr>
@@ -141,9 +189,52 @@
     
 
 <script>
+    var csrftoken = $('meta[name=csrf-token]').attr('content')
+    
+    // $(document).ready(function(){
+    //     // $('button.sendTweet').on('click',function(){
+    //     //     var text = document.getElementById("tweetText").value;
+    //     //     $.ajax({
+
+    //     //         data:{
+    //     //             tweetTxt:text
+    //     //         },
+    //     //         type: 'POST',
+    //     //         url: '/tweet'  
+
+    //     //     })
+    //     //     .done(function(data){
+    //     //       alert("Tweet Successfully sent");
+    //     //       document.getElementById("tweetText").value = "";
+    //     //     });
+
+
+    //     // });
+    // });
+
     $(document).ready(function(){
         getData();
         getTweetReport();
+
+
+        $('button.sendTweet').on('click',function(){
+            var text = document.getElementById("tweetText").value;
+            $.ajax({
+
+                data:{
+                    tweetTxt:text
+                },
+                type: 'POST',
+                url: '/tweet'  
+
+            })
+            .done(function(data){
+              alert("Tweet Successfully sent");
+              document.getElementById("tweetText").value = "";
+            });
+
+
+        });
         
     });
     function getData(){
@@ -222,6 +313,9 @@
                 }).done(function(data){  
                     document.getElementById("rawTweets").innerHTML = data.raw;
                     document.getElementById("filteredTweets").innerHTML = data.filtered;
+                    var percent = .100 *data.raw / data.filtered;
+                    document.getElementById("filtered_percent").innerHTML = percent.toFixed(2) + "%";
+                    document.getElementById("warnedTweets").innerHTML = data.warn;
                     for(x = 0 ; x < 5 ; x++){
                         
                         document.getElementById("top"+x).innerHTML = data.users[x][1];

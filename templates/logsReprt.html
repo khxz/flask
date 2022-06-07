@@ -25,12 +25,12 @@
           <i class="fa fa-user-o" aria-hidden="true"></i>
           DASHBOARD
         </a>
-        <a href="/reportList" class="text">
+        <a href="/warnList" class="text">
           <i class="fa fa-laptop" aria-hidden="true"></i>
           WARNINGS
         </a>
-        <a href="javascript:void(0)" class="text">
-          <i class="fa fa-clone" aria-hidden="true"></i>
+        <a href="/reportList" class="text active">
+          <i class="fa fa-clone active" aria-hidden="true"></i>
           REPORTED
         </a>
         <a href="/index" class="text">
@@ -77,7 +77,6 @@
 
 <script>
      $(document).ready(function(){
-        checkWarned()
         getAllTweets();
         
     });
@@ -251,17 +250,7 @@
 
                 });
         }
-        function checkWarned(){
-            $.ajax({
-                
-                type: 'POST',
-                url: '/checkWarned',
 
-                }).done(function(data){  
-                    console.log("db Checked");
-
-                });
-        }
 
 
 </script>

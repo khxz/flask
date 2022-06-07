@@ -52,20 +52,16 @@
   --color-light: white;
   --color-dark: #212121;
   --color-signal: #fab700;
-  --color-bg: #1F2833;
-  --color-background: var(--color-bg);
   --color-text: var(--color-dark);
   --color-accent: var(--color-signal);
-  --size-bezel: 0.5rem;
-  --size-radius: 4px;
-  line-height: 1.4;
+  
   font-family: "Inter", sans-serif;
   font-size: calc(0.6rem + 0.4vw);
   color: var(--color-text);
-  background: var(--color-background);
+  
   font-weight: 300;
-  padding: 0 calc(var(--size-bezel) * 3);
-  margin-left: 32px;
+  width: 46vh;
+  
   /* half of width */
 }
 
@@ -90,6 +86,8 @@ mark {
   border: 3px solid var(--color-shadow, currentColor);
   -webkit-box-shadow: 0.5rem 0.5rem 0 var(--color-shadow, currentColor);
           box-shadow: 0.5rem 0.5rem 0 var(--color-shadow, currentColor);
+  
+  height: 40vh;
 }
 
 .card--inverted {

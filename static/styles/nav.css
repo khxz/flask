@@ -1,3 +1,13 @@
+.active{
+  color: #5596DF;
+  background: #4B5161;
+  outline: none;
+  position: relative;
+  background-color: #4B5161;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
 .aside {
   margin-top: 200px;
   color: #fff;
@@ -9,6 +19,7 @@
   height: 550px;
   border-bottom-right-radius: 70px;
 }
+
 
 .aside a {
   font-size: 12px;
@@ -31,15 +42,7 @@
   border-bottom-left-radius: 20px;
 }
 
-.aside a:active{
-  color: #5596DF;
-  background: #4B5161;
-  outline: none;
-  position: relative;
-  background-color: #4B5161;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-}
+
 
 .aside a i {
   margin-right: 5px;

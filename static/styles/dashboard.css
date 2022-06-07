@@ -154,20 +154,32 @@ footer {
 }
 #tweet_counter{
    background: #EEEEEE;
-   width: 90vh;
+   width: 48vh;
    height: 40vh;
    border-radius: 2%;
+}
+#tweetings{
+   background: hsl(221, 7%, 52%);
+   width: 50vh;
+   border-radius: 2%;
+   
 }
 #top_list{
-   background: #7C818C;
-   width: 53vh;
+   background: #EEEEEE;
+   width: 52vh;
    height: 40vh;
    border-radius: 2%;
-   margin-left : 5%;
+   margin-left : 8%;
+   
 }
+
+#tweetlbl{
+   color: white;
+}
+
 .rawTweets{
 font-weight: bold;
-font-size: 40px;
+font-size: 20px;
 }
 .tweetsText{
 font-weight: bold;
