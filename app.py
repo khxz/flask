@@ -331,7 +331,7 @@ def warning():
     yearofTweet = str(results[0][8])
     hourofTweet = str(results[0][9])
     try:
-        api.update_status("hello, our system noticed that your tweet/reply contains inappropriate languages that may induce or result to cyberbullying. This will serve as a warning and we advice to use proper online etiquette.", in_reply_to_status_id = tweetID , auto_populate_reply_metadata=True)
+        api.update_status("Hi, our system noticed that your tweet/reply contains inappropriate languages that may induce or result to cyberbullying or cyberhate. This will serve a warning, please advice to use proper online etiquette. Have a good day!", in_reply_to_status_id = tweetID , auto_populate_reply_metadata=True)
         connection143 = sqlite3.connect("logs.db")
         cursor123 = connection143.cursor()
         cursor123.execute("INSERT INTO warning(tweet_text, user_id, tweet_date, tweet_id, tweet_status,date_only,tweet_month,tweet_day,tweet_year,tweet_hour) VALUES(?,?,?,?,?,?,?,?,?,?)", (tweetTxt,userID,date,tweetID,status,dateofTweet,monthofTweet,dayofTweet,yearofTweet,hourofTweet))
@@ -420,7 +420,9 @@ def logs():
 def log():
     return render_template("logfiles.html")
 
-
+@app.route('/print')
+def print():
+    return render_template("print.html")
 
 # ACCOUNT ROUTE
 
@@ -506,8 +508,8 @@ def insert():
         cursor.execute("INSERT INTO keywords1(keyword_text) VALUES(?)",[new_keyword])
         connection.commit()
     else:
-        return redirect(url_for("home"))
-    return redirect(url_for("home"))
+        return redirect(url_for("keywordsList"))
+    return redirect(url_for("keywordsList"))
 
 
 @app.route("/viewWords")
@@ -570,7 +572,12 @@ def getTweetReport():
     cursor4 = connection.cursor()
     cursor4.execute("select COUNT(tweet_text) as No_ofwarn from warning where date_only = ?", [date])
     result4 = cursor4.fetchall()
-    return jsonify({"raw": result,"filtered":result2,"users":result3,"warn":result4})
+
+    cursor5 = connection.cursor()
+    cursor5.execute("select COUNT(tweet_text) as No_ofrep from reported where report_date = ?", [date])
+    result5 = cursor5.fetchall()
+
+    return jsonify({"raw": result,"filtered":result2,"users":result3,"warn":result4,"rep":result5})
 
 
 @app.route("/checkWarned",methods=["POST"])
@@ -596,6 +603,11 @@ def checkWarned():
 def reportList():
     return render_template("logsReprt.html")
 
+@app.route("/printReport")
+def printReport():
+    return render_template("logsReprtPrint.html")
+
+
 @app.route("/keywordsList")
 def keywordsList():
     connection = sqlite3.connect("keywords.db")
@@ -618,10 +630,10 @@ def warnList():
 def getAllReprt():
     connection = sqlite3.connect("logs.db")
     cursor = connection.cursor()
-    cursor.execute("select * from report")
+    cursor.execute("select * from reported")
     result = cursor.fetchall()
     
-    return jsonify({"report":result})
+    return jsonify({"tweets":result})
 
 
 @app.route("/getAllWarned",methods=["POST"])

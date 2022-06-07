@@ -18,7 +18,7 @@
 </head>
 
 
-<body>
+<body onload="zoom()" style="zoom: 1.1;">
     
         <div class="col-md-2 position-fixed">
             <nav class="position-sticky">
@@ -65,17 +65,21 @@
           day = "0" + day;
       var today = now.getFullYear() + '-' + month + '-' + day;
       $('#tweetDate').val(today);
-      zoom();
-  });
-  function dateChange(){
       
-      getData();
-      getTweetReport();
-  }
-  function zoom() {
-            document.body.style.zoom = "300%";
-            document.body.style.zoom = "100%";
-        }
+  });
+    function zoom(){
+        zoom2();
+    }
+    function dateChange(){
+        
+        getData();
+        getTweetReport();
+    }
+    
+    function zoom2() {
+        
+        document.body.style.zoom = "100%";
+    }
 </script>
 <div class="col-md-9" style="margin-left: 20%; margin-top: 3%;" id="left-cont">
   <div class="mb-3 row" style="width: 30%;">
@@ -326,6 +330,7 @@
                     var percent = .100 *data.raw / data.filtered;
                     document.getElementById("filtered_percent").innerHTML = percent.toFixed(2) + "%";
                     document.getElementById("warnedTweets").innerHTML = data.warn;
+                    document.getElementById("reportedTweets").innerHTML = data.rep;
                     for(x = 0 ; x < 5 ; x++){
                         
                         document.getElementById("top"+x).innerHTML = data.users[x][1];

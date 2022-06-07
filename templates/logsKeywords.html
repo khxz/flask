@@ -11,9 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
     <link rel="stylesheet" href="../static/styles/nav.css">
     <link rel="stylesheet" href="../static/styles/button.css">
+    <link rel="stylesheet" href="../static/styles/main.css">
     <link rel="stylesheet" href="/static/styles/dashboard.css">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main.css') }}">
-
 </head>
 <body>
    
@@ -49,31 +48,62 @@
           </a>
     </div></nav>
 </div>
+
+<form action="insertkey" method="POST">
+
+<div class="row" style="z-index: -1;">
+    <div style="float: right;">
+    <nav class="position-fixed top-50 start-100 translate-middle">
+        <div class="asideleft">
+            <div class="contentadd">
+             <h4>Add Keyword</h4>
+             <hr style="border-style:solid ;border-width:2px; border-color:black">
+             <br><br>
+             
+                  
+                    
+                    
+                        
+                          <label for="inputPassword" class="col-sm-2 col-form-label">Keyword</label>
+                          <br><br>
+                            <input type="text" name = "keyword" class="form-control" id="inputPassword" style="width: 40vh ;">
+                          
+                            <br><br>
+                    
+                      
+                      <button type="submit" name="submit" class="btn btn-primary" style="width: 90px ;">Add</button>
+                   
+                </div>
+              
+            </div>
+        </div>
+    </nav>
+    </div>
+</div>
+</form>
          
          <div class="col-md-9" style="margin-left: 20%;" id="left-cont">
             <center><h2 style="margin-top: 3%;">Reported Users/Tweets</h2></center>
-            <table class="table" style="background-color: white;">
-                <thead class="table-dark">
+            <table class="table tablekeys" id="table1" style="background-color: #e0e5ec; table-layout: fixed; ">
+                <thead class="table-dark" style="z-index: -1;">
                   <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Keywords</th>
-                    <th scope="col">Actions</th>
+                    <th class="col-no">#</th>
+                    <th class="col-1">Keywords</th>
+                    <th class="col-1">Actions</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="tableBody" style="z-index: 9;">
                     {% for x in range(0,keywords|length) %}
                         <tr>
                             <td>{{ key_id[x] }}</td>
-                            <th scope="row">{{ keywords[x] }}</th>
+                            <td>{{ keywords[x] }}</td>
                             
                             <td><button type="button" class="btn btn-danger" id ='{{ key_id[x] }}'>Delete</button></td>
                         </tr>
-                    {% endfor %}
-                  
-                  
+                    {% endfor %}   
                 </tbody>
-                
               </table>
+              </div>
               <script type="text/javascript">
                 $(document).ready(function(){
                     $('button.btn.btn-danger').on('click',function(){

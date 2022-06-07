@@ -13,55 +13,24 @@
     <link rel="stylesheet" href="../static/styles/button.css">
     <link rel="stylesheet" href="/static/styles/dashboard.css">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/main.css') }}">
-    
+    <link rel="stylesheet" href="../static/styles/maio.css">
+
 </head>
 <body>
    
-        <div class="col-md-2 position-fixed">
-            <nav class="position-sticky">
-            <div class="aside">
-        <p class="text logo"> CyberDetector </p>
-
-        <a href="/ourLogs" class="text">
-          <i class="fa fa-user-o" aria-hidden="true"></i>
-          DASHBOARD
-        </a>
-        <a href="/warnList" class="text">
-          <i class="fa fa-laptop" aria-hidden="true"></i>
-          WARNINGS
-        </a>
-        <a href="/reportList" class="text active">
-          <i class="fa fa-clone active" aria-hidden="true"></i>
-          REPORTED
-        </a>
-        <a href="/keywordsList" class="text">
-            <i class="fa fa-clone" aria-hidden="true"></i>
-            KEYWORDS
-          </a>
-        <a href="/index" class="text">
-          <i class="fa fa-star-o" aria-hidden="true"></i>
-          STREAM
-        </a>
-
-        <a href="javascript:void(0)" class="logout">
-            <i class="fa fa-star-o" aria-hidden="true"></i>
-            LOG OUT
-          </a>
-    </div></nav>
-</div>
-         
-         <div class="col-md-9" style="margin-left: 20%;" id="left-cont">
             <center><h2 style="margin-top: 3%;">Reported Users/Tweets</h2></center>
-            <center>
-            <button type="button" class="custom-btn btn-5" onClick="printExternal()">Print</button>
-            </center>
-            <table class="table" id="table1" style="background-color: #e0e5ec; table-layout: fixed; ">
+            <center><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp This is the summary of gathered reported data from our detector as of today, <span id="date"></span>. Listed below are the users that were reported and the tweet content which caused them to recieve warnings.</p></center>
+            <!-- <button type="button" class="custom-btn btn-5" onClick="getAllTweets()">All Tweets</button>
+            <button type="button" class="custom-btn btn-5 btn-5avail" onclick="getAvailableWarn()">Available Tweets</button>
+            <button type="button" class="custom-btn btn-5 btn-5remv" onclick="getDeletedWarn()">Removed Tweets</button> -->
+
+            <table class="table" id="table1" style="background-color: #e0e5ec; table-layout: fixed; font-size: 9px ">
                 <thead class="table-dark">
                   <tr>
-                    <th scope="col" style="width:10%;word-wrap: break-word;">Date</th>
+                    <th scope="col" style="width:5%;word-wrap: break-word;">Date</th>
                     <th scope="col" style="width:10%;word-wrap: break-word;">User ID</th>
                     <th scope="col" style="width:60%;word-wrap: break-word;">Tweet</th>
-                    <th scope="col" style="width:10%;word-wrap: break-word;">Actions</th>
+                    
                   </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -81,23 +50,18 @@
 
 <script>
      $(document).ready(function(){
+      var now = new Date();
+      var month = (now.getMonth() + 1);               
+      var day = now.getDate();
+      if (month < 10) 
+          month = "0" + month;
+      if (day < 10) 
+          day = "0" + day;
+      var today = now.getFullYear() + '-' + month + '-' + day;
+      document.getElementById("date").innerHTML = today
         getAllTweets();
         
     });
-    function printExternal(url) {
-    var printWindow = window.open( "printReport", 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
-    printWindow.addEventListener('load', function() {
-        if (Boolean(printWindow.chrome)) {
-            printWindow.print();
-            setTimeout(function(){
-                printWindow.close();
-            }, 500);
-        } else {
-            printWindow.print();
-            printWindow.close();
-        }
-    }, true);
-}
     function getAllTweets(){
         
                 var tableHeaderRowCount = 1;
@@ -129,21 +93,12 @@
                         td3.innerHTML = tweet;
 
 
-                        var td5 = document.createElement('td');
-                        var button1 = document.createElement('button');
-                        button1.innerHTML = "Visit"
-                        var user1 = user.replace("@","")
-                        var str = "https://twitter.com/" + user +"/status/" + links;
-                        button1.setAttribute("onClick","window.open('"+ str +"')");
-                        button1.setAttribute("class","btn btn-info");
-                        td5.append(button1);
-
 
                         var tr1 = document.createElement('tr');
                         tr1.appendChild(td1);
                         tr1.appendChild(td2);
                         tr1.appendChild(td3);
-                        tr1.appendChild(td5);
+                        
                         document.getElementById("tableBody").appendChild(tr1);
 
 

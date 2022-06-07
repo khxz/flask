@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRINT</title>
+    <link rel="stylesheet" href="/static/styles/print.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/tweet.css') }}">
+    <link rel="stylesheet" href="../static/styles/nav.css">
+    <link rel="stylesheet" href="/static/styles/dashboard.css">
+<style>
+    
+/**
+ * Print Stylesheet fuer Deinewebsite.de
+* @version         1.0
+* @lastmodified    16.06.2016
+*/
+
+@media print {
+ 
+ /* Inhaltsbreite setzen, Floats und Margins aufheben */
+ /* Achtung: Die Klassen und IDs variieren von Theme zu Theme. Hier also eigene Klassen setzen */
+ #content, #page {
+ width: 100%; 
+ margin: 0; 
+ float: none;
+ }
+     
+ /** Seitenränder einstellen */       
+ @page { margin: 2cm }
+ 
+ /* Font auf 16px/13pt setzen, Background auf Weiß und Schrift auf Schwarz setzen.*/
+ /* Das spart Tinte */
+ body {
+ font: 13pt Georgia, "Times New Roman", Times, serif;
+ line-height: 1.3;
+ background: #fff !important;
+ color: #000;
+ }
+ 
+ h1 {
+ font-size: 24pt;
+ }
+ 
+ h2, h3, h4 {
+ font-size: 14pt;
+ margin-top: 25px;
+ }    
+  
+ /* Alle Seitenumbrüche definieren */
+ a {
+     page-break-inside:avoid
+ }
+ blockquote {
+     page-break-inside: avoid;
+ }
+ h1, h2, h3, h4, h5, h6 { page-break-after:avoid; 
+      page-break-inside:avoid }
+ img { page-break-inside:avoid; 
+      page-break-after:avoid; }
+ table, pre { page-break-inside:avoid }
+ ul, ol, dl  { page-break-before:avoid }
+     
+ /* Linkfarbe und Linkverhalten darstellen */
+ a:link, a:visited, a {
+ background: transparent;
+ color: #520;
+ font-weight: bold;
+ text-decoration: underline;
+ text-align: left;
+ }
+ 
+ a {
+     page-break-inside:avoid
+ }
+ 
+ a[href^=http]:after {
+       content:" <" attr(href) "> ";
+ }
+ 
+ a:after > img {
+    content: "";
+ }
+ 
+ article a[href^="#"]:after {
+    content: "";
+ }
+ 
+ a:not(:local-link):after {
+    content:" <" attr(href) "> ";
+ }
+     
+ /**
+  * Eingebundene Videos verschwinden lassen und den Whitespace der iframes auf null reduzieren.
+  */
+ .entry iframe, ins {
+     display: none;
+     width: 0 !important;
+     height: 0 !important;
+     overflow: hidden !important;
+     line-height: 0pt !important;
+     white-space: nowrap;
+ }
+ .embed-youtube, .embed-responsive {
+   position: absolute;
+   height: 0;
+   overflow: hidden;
+ }
+     
+ /* Unnötige Elemente ausblenden für den Druck */
+ 
+ #header-widgets, nav, aside.mashsb-container, 
+ .sidebar, .mashshare-top, .mashshare-bottom, 
+ .content-ads, .make-comment, .author-bio, 
+ .heading, .related-posts, #decomments-form-add-comment, 
+ #breadcrumbs, #footer, .post-byline, .meta-single, 
+ .site-title img, .post-tags, .readability 
+ {
+ display: none;
+ }
+     
+ /* Benutzerdefinierte Nachrichten vor und nach dem Inhalt einfügen */
+ .entry:after {
+ content: "\ Alle Rechte vorbehalten. (c) 2014 - 2016 TechBrain - techbrain.de";
+ color: #999 !important;
+ font-size: 1em;
+ padding-top: 30px;
+ }
+ #header:before {
+ content: "\ Vielen herzlichen Dank für das Ausdrucken unseres Artikels. Wir hoffen, dass auch andere Artikel von uns Ihr Interesse wecken können.";
+ color: #777 !important;
+ font-size: 1em;
+ padding-top: 30px;
+ text-align: center !important;    
+ }
+ 
+ /* Wichtige Elemente definieren */    
+ p, address, li, dt, dd, blockquote {
+ font-size: 100%
+ }
+ 
+ /* Zeichensatz fuer Code Beispiele */
+ code, pre { font-family: "Courier New", Courier, mono}
+ 
+ ul, ol {
+ list-style: square; margin-left: 18pt;
+ margin-bottom: 20pt;    
+ }
+ 
+ li {
+ line-height: 1.6em;
+ }    
+     
+ }
+</style>
+
+</head>
+<body onload="zoom()" style="zoom: 1.1;">
+
+    <h1>Heading</h1>
+
+  <p> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp This is a summary of reports for the day <span id="date" ></span> with statistical data provided below:</p>
+
+  <script>
+    $(document).ready( function() {
+      var now = new Date();
+      var month = (now.getMonth() + 1);               
+      var day = now.getDate();
+      if (month < 10) 
+          month = "0" + month;
+      if (day < 10) 
+          day = "0" + day;
+      var today = now.getFullYear() + '-' + month + '-' + day;
+      $('#tweetDate').val(today);
+      
+  });
+    function zoom(){
+        zoom2();
+    }
+    function dateChange(){
+        
+        getData();
+        getTweetReport();
+    }
+    
+    function zoom2() {
+        
+        document.body.style.zoom = "100%";
+    }
+</script>
+
+  <div class="myChart" style="background-color: #EEEEEE;">
+    <canvas id="myChart" width="900" height="200"></canvas>
+</div>
+
+
+
+
+
+<script>
+$(document).ready(function(){
+        getData();
+        getTweetReport();
+        
+    
+    });
+    function getData(){
+        var today = new Date();
+
+        var year = today.getFullYear();
+        var month = String(today.getMonth()+1).padStart(2, "0");
+        var day = String(today.getDate()).padStart(2, "0");
+        var date = year+"-"+month+"-"+day;
+        const dataName = ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"];
+        const dataValue = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        document.getElementById("date").innerHTML = today;
+        $.ajax({
+                
+                type: 'POST',
+                url: '/readDatabase',
+                data:{
+                    date:date
+                }
+
+                }).done(function(data){  
+                    var length = data.result.length
+                    for(x = 0; x < length; x++){
+                        
+                        dataValue[data.result[x][0]] = parseFloat(data.result[x][1]);
+                        
+                        
+
+                    }
+
+                });
+        console.log(dataName);
+        
+        console.log(dataValue);
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dataName,
+                datasets: [{
+                    label: '# of Tweets',
+                    data: dataValue,
+                    backgroundColor: 
+                        'rgba(255, 99, 132, 0.2)'
+                        
+                    ,
+                    borderColor: 
+                        'rgba(255, 99, 132, 1)'
+                        
+                    ,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        };
+        function getTweetReport(){
+            var today = new Date();
+
+            var year = today.getFullYear();
+            var month = String(today.getMonth()+1).padStart(2, "0");
+            var day = String(today.getDate()).padStart(2, "0");
+            var date = document.getElementById("tweetDate").value;
+            $.ajax({
+                
+                type: 'POST',
+                url: '/getTweetReport',
+                data:{
+                    date:date
+                }
+
+                }).done(function(data){  
+                    document.getElementById("rawTweets").innerHTML = data.raw;
+                    document.getElementById("filteredTweets").innerHTML = data.filtered;
+                    var percent = .100 *data.raw / data.filtered;
+                    document.getElementById("filtered_percent").innerHTML = percent.toFixed(2) + "%";
+                    document.getElementById("warnedTweets").innerHTML = data.warn;
+                    document.getElementById("reportedTweets").innerHTML = data.rep;
+                    for(x = 0 ; x < 5 ; x++){
+                        
+                        document.getElementById("top"+x).innerHTML = data.users[x][1];
+                        document.getElementById("valtop"+x).innerHTML = data.users[x][0];
+                    }
+
+                });
+        }
+</script>
+
+</body>
+</html>
