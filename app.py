@@ -33,7 +33,14 @@ connection2 = sqlite3.connect("logs.db")
 cursor2 = connection2.cursor()
 
 # cursor2.execute("""CREATE TABLE IF NOT EXISTS tweet_counter (id INTEGER PRIMARY KEY AUTOINCREMENT, count_date text, no_oftweet INTEGER) """)
-
+cursor2.execute("""CREATE TABLE "reported" (
+	"id"	INTEGER,
+	"user_id"	TEXT,
+	"tweet_id"	TEXT,
+	"tweet_text"	TEXT,
+	"report_date"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);""")
 
 
 
