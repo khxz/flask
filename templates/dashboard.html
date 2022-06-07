@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/tweet.css') }}">
     <link rel="stylesheet" href="../static/styles/nav.css">
+    <link rel="stylesheet" href="../static/styles/button.css">
     <link rel="stylesheet" href="/static/styles/dashboard.css">
     
 
@@ -80,15 +81,32 @@
         
         document.body.style.zoom = "100%";
     }
+    function printExternal(url) {
+    var printWindow = window.open( "print", 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+    printWindow.addEventListener('load', function() {
+        if (Boolean(printWindow.chrome)) {
+          setTimeout(function() {
+                printWindow.print();
+            }, 100);
+            setTimeout(function(){
+                printWindow.close();
+            }, 500);
+        } else {
+            printWindow.print();
+            printWindow.close();
+        }
+    }, true);
+}
 </script>
 <div class="col-md-9" style="margin-left: 20%; margin-top: 3%;" id="left-cont">
-  <div class="mb-3 row" style="width: 30%;">
-      <label for="inputPassword" class="col-sm-3 col-form-label">Date :</label>
-      <div class="col-sm-7">
-      <input type="date" class="form-control" id="tweetDate" onChange="dateChange()">
-      </div>
+  <div class=".col-xs-7 .col-md-5">
+      <label for="inputPassword" class="col-sm-3 col-form-label" style="color: #EEEEEE;">Date :</label>
+      <div>
+      <input class=".col-sm-4" type="date" class="form-control" id="tweetDate" style="width: 30%;" onChange="dateChange()">
+      <button type="button" class="custom-btn btn-5 .col-sm-3" style="position: absolute; right: 0; margin-right: 5%;"  onClick="printExternal()">Print</button>
+    </div>
   </div>
-  <div class="myChart" style="background-color: #EEEEEE;">
+  <div class="myChart" style="background-color: #EEEEEE;margin-top: 3%;">
     <canvas id="myChart" width="900" height="200"></canvas>
 </div>
             <div class="row" style="margin-top:5%">

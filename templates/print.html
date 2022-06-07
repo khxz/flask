@@ -160,11 +160,11 @@
 </style>
 
 </head>
-<body onload="zoom()" style="zoom: 1.1;">
+<body onload="zoom()" style="zoom: 1.1; font-size:larger;">
 
-    <h1>Heading</h1>
+    <h1>Overall Report Summary</h1>
 
-  <p> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp This is a summary of reports for the day <span id="date" ></span> with statistical data provided below:</p>
+  <p> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp This is a summary of reports for the day <span id="tweetDate" ></span> with statistical data provided below:</p>
 
   <script>
     $(document).ready( function() {
@@ -177,6 +177,7 @@
           day = "0" + day;
       var today = now.getFullYear() + '-' + month + '-' + day;
       $('#tweetDate').val(today);
+      document.getElementById("tweetDate").innerHTML = today;
       
   });
     function zoom(){
@@ -193,11 +194,70 @@
         document.body.style.zoom = "100%";
     }
 </script>
-
+<div class="col-md-9" style="margin-top: 1%;">
   <div class="myChart" style="background-color: #EEEEEE;">
-    <canvas id="myChart" width="900" height="200"></canvas>
+    <canvas id="myChart" width="700" height="200"></canvas>
 </div>
+</div>
+<br><br>
+<div style="margin: top 2%;">
+    
+    <p> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp On the day of <span id="tweetDate" ></span> our system gathered a total of <span id="rawTweets"></span> raw tweets. The detector on the other hand gathered a total of <span id="filteredTweets"></span> with a total percentage (filtered tweet per raw tweet) <span id="filtered_percent"></span>. </p>
+    <p> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp This day a total of <span id="warnedTweets"></span> was warned by our system, and users from <span id="reportedTweets"></span> tweets were reported.</p>
+    <p> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp The following users recieved most warning given by the operators of our web based detector:</p>
 
+    <table class="table" style="width: 50%;">
+        <thead>
+          <tr>
+            <th scope="col">User Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="top0"></td>
+          </tr>
+          <tr>
+            <td id="top1"></td>
+          </tr>
+          <tr>
+            <td id="top2"></td>
+          </tr>
+          <tr>
+            <td id="top3"></td>
+          </tr>
+          <tr>
+            <td id="top4"></td>
+          </tr>
+        </tbody>
+      </table>
+      <br><br>
+      <p> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp The following users recieved most report given by the operators of our web based detector:</p>
+
+      <table class="table" style="width: 50%;">
+          <thead>
+            <tr>
+              <th scope="col">User Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="rtop0"></td>
+            </tr>
+            <tr>
+              <td id="rtop1"></td>
+            </tr>
+            <tr>
+              <td id="rtop2"></td>
+            </tr>
+            <tr>
+              <td id="rtop3"></td>
+            </tr>
+            <tr>
+              <td id="rtop4"></td>
+            </tr>
+          </tbody>
+        </table>
+</div>
 
 
 
@@ -210,15 +270,16 @@ $(document).ready(function(){
     
     });
     function getData(){
-        var today = new Date();
+        // var today = new Date();
 
-        var year = today.getFullYear();
-        var month = String(today.getMonth()+1).padStart(2, "0");
-        var day = String(today.getDate()).padStart(2, "0");
-        var date = year+"-"+month+"-"+day;
+        // var year = today.getFullYear();
+        // var month = String(today.getMonth()+1).padStart(2, "0");
+        // var day = String(today.getDate()).padStart(2, "0");
+        // var date = year+"-"+month+"-"+day;
+        var date = document.getElementById("tweetDate").value;
         const dataName = ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"];
         const dataValue = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-        document.getElementById("date").innerHTML = today;
+        // document.getElementById("date").innerHTML = today;
         $.ajax({
                 
                 type: 'POST',
@@ -292,10 +353,12 @@ $(document).ready(function(){
                     document.getElementById("filtered_percent").innerHTML = percent.toFixed(2) + "%";
                     document.getElementById("warnedTweets").innerHTML = data.warn;
                     document.getElementById("reportedTweets").innerHTML = data.rep;
+                    
                     for(x = 0 ; x < 5 ; x++){
                         
-                        document.getElementById("top"+x).innerHTML = data.users[x][1];
-                        document.getElementById("valtop"+x).innerHTML = data.users[x][0];
+                        document.getElementById("top"+x).innerHTML = data.warned[x][1];
+                        document.getElementById("rtop"+x).innerHTML = data.reported[x][1];
+                        
                     }
 
                 });

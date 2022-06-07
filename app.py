@@ -577,7 +577,15 @@ def getTweetReport():
     cursor5.execute("select COUNT(tweet_text) as No_ofrep from reported where report_date = ?", [date])
     result5 = cursor5.fetchall()
 
-    return jsonify({"raw": result,"filtered":result2,"users":result3,"warn":result4,"rep":result5})
+    cursor6 = connection.cursor()
+    cursor6.execute("SELECT count(tweet_text) as count,user_id FROM warning WHERE NOT EXISTS(SELECT * FROM reported WHERE reported.user_id = warning.user_id) AND  date_only = ? group by user_id ORDER BY count desc", [date])
+    result6 = cursor6.fetchall()
+
+    cursor7 = connection.cursor()
+    cursor7.execute("SELECT count(tweet_text) as count,user_id FROM reported WHERE report_date = ? group by user_id ORDER BY count desc", [date])
+    result7 = cursor7.fetchall()
+
+    return jsonify({"raw": result,"filtered":result2,"users":result3,"warn":result4,"rep":result5, "warned":result6, "reported":result7})
 
 
 @app.route("/checkWarned",methods=["POST"])
