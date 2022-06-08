@@ -33,14 +33,14 @@ connection2 = sqlite3.connect("logs.db")
 cursor2 = connection2.cursor()
 
 # cursor2.execute("""CREATE TABLE IF NOT EXISTS tweet_counter (id INTEGER PRIMARY KEY AUTOINCREMENT, count_date text, no_oftweet INTEGER) """)
-cursor2.execute("""CREATE TABLE IF NOT EXISTS "reported" (
-	"id"	INTEGER,
-	"user_id"	TEXT,
-	"tweet_id"	TEXT,
-	"tweet_text"	TEXT,
-	"report_date"	TEXT,
-	PRIMARY KEY("id" AUTOINCREMENT)
-);""")
+# cursor2.execute("""CREATE TABLE "reported" (
+# 	"id"	INTEGER,
+# 	"user_id"	TEXT,
+# 	"tweet_id"	TEXT,
+# 	"tweet_text"	TEXT,
+# 	"report_date"	TEXT,
+# 	PRIMARY KEY("id" AUTOINCREMENT)
+# );""")
 
 
 
@@ -130,7 +130,7 @@ def home1():
 
 
 @app.route('/readTweet',methods=["POST","GET"])
-def readTweet():
+def readTweet1():
     date = request.form["date"]
     connection2 = sqlite3.connect("logs.db")
     cursor2 = connection2.cursor()
@@ -171,7 +171,7 @@ def newTweet():
 
             #CHECKING POLARITY
             analysis = TextBlob(status.text)
-            if analysis.polarity <= 0:
+            if analysis.polarity < 0:
 
                 tweet_id = ""
                 user_id = ""
@@ -331,7 +331,7 @@ def warning():
     yearofTweet = str(results[0][8])
     hourofTweet = str(results[0][9])
     try:
-        api.update_status("Hi, our system noticed that your tweet/reply contains inappropriate languages that may induce or result to cyberbullying or cyberhate. This will serve a warning, please advice to use proper online etiquette. Have a good day!", in_reply_to_status_id = tweetID , auto_populate_reply_metadata=True)
+        api.update_status("hello, our system noticed that your tweet/reply contains inappropriate languages that may induce or result to cyberbullying. This will serve as a warning and we advice to use proper online etiquette.", in_reply_to_status_id = tweetID , auto_populate_reply_metadata=True)
         connection143 = sqlite3.connect("logs.db")
         cursor123 = connection143.cursor()
         cursor123.execute("INSERT INTO warning(tweet_text, user_id, tweet_date, tweet_id, tweet_status,date_only,tweet_month,tweet_day,tweet_year,tweet_hour) VALUES(?,?,?,?,?,?,?,?,?,?)", (tweetTxt,userID,date,tweetID,status,dateofTweet,monthofTweet,dayofTweet,yearofTweet,hourofTweet))
@@ -422,26 +422,6 @@ def log():
 
 
 
-@app.route('/print/<date>')
-def print(date):
-
-    return render_template("print.html",date=date)
-
-
-
-@app.route('/reportTop',methods=["POST"])
-def reportTop():
-    
-    user = request.form["user"]
-
-    connection143 = sqlite3.connect("logs.db")
-    cursor123 = connection143.cursor()
-    cursor123.execute("INSERT INTO reported(user_id,tweet_id,tweet_text,report_date) VALUES(?,?,?,?)", (user,"N/A","REPORTED DUE TO MULTIPLE WARNING",date_only))
-    connection143.commit()
-
-    return jsonify("")
-
-
 # ACCOUNT ROUTE
 
 
@@ -526,8 +506,8 @@ def insert():
         cursor.execute("INSERT INTO keywords1(keyword_text) VALUES(?)",[new_keyword])
         connection.commit()
     else:
-        return redirect(url_for("keywordsList"))
-    return redirect(url_for("keywordsList"))
+        return redirect(url_for("home"))
+    return redirect(url_for("home"))
 
 
 @app.route("/viewWords")
@@ -615,7 +595,25 @@ def getTweetReport():
     cursor10.execute("select COUNT(tweet_text) as warncount from warning")
     result10 = cursor10.fetchall()
 
-    return jsonify({"raw": result,"filtered":result2,"users":result3,"warn":result4,"rep":result5, "warned":result6, "reported":result7, "warnactive":result8, "warnremoved":result9, "warncount":result10})
+    cursor11 = connection.cursor()
+    cursor11.execute("select COUNT(tweet_text) as reportcount from reported")
+    result11 = cursor11.fetchall()
+
+    return jsonify({"raw": result,"filtered":result2,"users":result3,"warn":result4,"rep":result5, "warned":result6, "reported":result7, "warnactive":result8, "warnremoved":result9, "warncount":result10, "reportc":result11})
+
+
+
+@app.route('/reportTop',methods=["POST"])
+def reportTop():
+    
+    user = request.form["user"]
+
+    connection143 = sqlite3.connect("logs.db")
+    cursor123 = connection143.cursor()
+    cursor123.execute("INSERT INTO reported(user_id,tweet_id,tweet_text,report_date) VALUES(?,?,?,?)", (user,"N/A","REPORTED DUE TO MULTIPLE WARNING",date_only))
+    connection143.commit()
+
+    return jsonify("")
 
 
 @app.route("/checkWarned",methods=["POST"])
@@ -637,14 +635,19 @@ def checkWarned():
     return jsonify("","")
 
 
-@app.route("/reportList")
-def reportList():
-    return render_template("logsReprt.html")
+@app.route('/print111/<date123>')
+def print111(date123):
+
+    return render_template("print.html",date=date123)
 
 @app.route("/printReport")
 def printReport():
     return render_template("logsReprtPrint.html")
 
+
+@app.route("/reportList")
+def reportList():
+    return render_template("logsReprt.html")
 
 @app.route("/keywordsList")
 def keywordsList():
