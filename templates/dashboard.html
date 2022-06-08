@@ -82,7 +82,8 @@
         document.body.style.zoom = "100%";
     }
     function printExternal(url) {
-    var printWindow = window.open( "print", 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
+    var date = document.getElementById("tweetDate").value;
+    var printWindow = window.open( "print/"+date, 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
     printWindow.addEventListener('load', function() {
         if (Boolean(printWindow.chrome)) {
           setTimeout(function() {
@@ -178,28 +179,33 @@
                         <tbody>
                           <tr>
                             <th scope="row">No 1.</th>
-                            <td id="top0">Mark</td>
+                            <td class="top" id="top0">Mark</td>
                             <td id="valtop0">Otto</td>
+                            <td class="report"><a href="#">Report</a></td>
                           </tr>
                           <tr>
                             <th scope="row">No 2.</th>
-                            <td id="top1">Jacob</td>
+                            <td class="top" id="top1">Jacob</td>
                             <td id="valtop1">Thornton</td>
+                            <td class="report"><a href="#">Report</a></td>
                           </tr>
                           <tr>
                             <th scope="row">No 3.</th>
-                            <td id="top2">Larry the Bird</td>
+                            <td class="top" id="top2">Larry the Bird</td>
                             <td id="valtop2">@twitter</td>
+                            <td class="report"><a href="#">Report</a></td>
                           </tr>
                           <tr>
                             <th scope="row">No 4.</th>
-                            <td id="top3"></td>
+                            <td class="top" id="top3"></td>
                             <td id="valtop3">@twitter</td>
+                            <td class="report"><a href="#">Report</a></td>
                           </tr>
                           <tr>
                             <th scope="row">No 5.</th>
-                            <td id="top4">Larry the Bird</td>
+                            <td class="top" id="top4">Larry the Bird</td>
                             <td id="valtop4">@twitter</td>
+                            <td class="report"><a href="#">Report</a></td>
                           </tr>
                         </tbody>
                       </table>
@@ -267,6 +273,26 @@
 
 
         });
+
+        $('.report').on('click',function(){
+            var user = $(this).closest('tr').find('.top').text();
+            
+            $.ajax({
+
+                data:{
+                  user:user
+                },
+                type: 'POST',
+                url: '/reportTop'  
+
+            })
+            .done(function(data){
+              alert("User Reported");
+              getTweetReport();
+            });
+
+
+        });
         
     });
     function getData(){
@@ -290,40 +316,40 @@
                         
 
                     }
-
+                    $("canvas#myChart").remove();
+                    $("div.myChart").append('<canvas id="myChart" width="800" height="200"></canvas>');
+                    const ctx = document.getElementById('myChart').getContext('2d');
+                    const myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: dataName,
+                            datasets: [{
+                                label: '# of Tweets',
+                                data: dataValue,
+                                backgroundColor: 
+                                    'rgba(255, 99, 132, 0.2)'
+                                    
+                                ,
+                                borderColor: 
+                                    'rgba(255, 99, 132, 1)'
+                                    
+                                ,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
                 });
         console.log(dataName);
         
         console.log(dataValue);
-        $("canvas#myChart").remove();
-        $("div.myChart").append('<canvas id="myChart" width="800" height="200"></canvas>');
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: dataName,
-                datasets: [{
-                    label: '# of Tweets',
-                    data: dataValue,
-                    backgroundColor: 
-                        'rgba(255, 99, 132, 0.2)'
-                        
-                    ,
-                    borderColor: 
-                        'rgba(255, 99, 132, 1)'
-                        
-                    ,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        
         
         };
 

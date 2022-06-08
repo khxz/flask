@@ -175,7 +175,7 @@
           month = "0" + month;
       if (day < 10) 
           day = "0" + day;
-      var today = now.getFullYear() + '-' + month + '-' + day;
+      var today ="{{date}}";
       $('#tweetDate').val(today);
       document.getElementById("tweetDate").innerHTML = today;
       
@@ -264,8 +264,10 @@
 
 <script>
 $(document).ready(function(){
+        
         getData();
         getTweetReport();
+        
         
     
     });
@@ -276,7 +278,7 @@ $(document).ready(function(){
         // var month = String(today.getMonth()+1).padStart(2, "0");
         // var day = String(today.getDate()).padStart(2, "0");
         // var date = year+"-"+month+"-"+day;
-        var date = document.getElementById("tweetDate").value;
+        var date = "{{date}}";
         const dataName = ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"];
         const dataValue = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
         // document.getElementById("date").innerHTML = today;
@@ -337,7 +339,7 @@ $(document).ready(function(){
             var year = today.getFullYear();
             var month = String(today.getMonth()+1).padStart(2, "0");
             var day = String(today.getDate()).padStart(2, "0");
-            var date = document.getElementById("tweetDate").value;
+            var date = "{{date}}";
             $.ajax({
                 
                 type: 'POST',

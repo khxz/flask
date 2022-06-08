@@ -420,9 +420,27 @@ def logs():
 def log():
     return render_template("logfiles.html")
 
-@app.route('/print')
-def print():
-    return render_template("print.html")
+
+
+@app.route('/print/<date>')
+def print(date):
+
+    return render_template("print.html",date=date)
+
+
+
+@app.route('/reportTop',methods=["POST"])
+def reportTop():
+    
+    user = request.form["user"]
+
+    connection143 = sqlite3.connect("logs.db")
+    cursor123 = connection143.cursor()
+    cursor123.execute("INSERT INTO reported(user_id,tweet_id,tweet_text,report_date) VALUES(?,?,?,?)", (user,"N/A","REPORTED DUE TO MULTIPLE WARNING",date_only))
+    connection143.commit()
+
+    return jsonify("")
+
 
 # ACCOUNT ROUTE
 

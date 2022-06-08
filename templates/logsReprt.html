@@ -55,7 +55,7 @@
             <center>
             <button type="button" class="custom-btn btn-5" onClick="printExternal()">Print</button>
             </center>
-            <table class="table" id="table1" style="background-color: #e0e5ec; table-layout: fixed; ">
+            <table class="table" id="table1" style="background-color: #e0e5ec; table-layout: fixed; margin-bottom: 5%; ">
                 <thead class="table-dark">
                   <tr>
                     <th scope="col" style="width:10%;word-wrap: break-word;">Date</th>
@@ -143,7 +143,10 @@
                         tr1.appendChild(td1);
                         tr1.appendChild(td2);
                         tr1.appendChild(td3);
-                        tr1.appendChild(td5);
+                        if(links != "N/A"){
+                          tr1.appendChild(td5);
+                        }
+                        
                         document.getElementById("tableBody").appendChild(tr1);
 
 
