@@ -603,7 +603,19 @@ def getTweetReport():
     cursor7.execute("SELECT count(tweet_text) as count,user_id FROM reported WHERE report_date = ? group by user_id ORDER BY count desc", [date])
     result7 = cursor7.fetchall()
 
-    return jsonify({"raw": result,"filtered":result2,"users":result3,"warn":result4,"rep":result5, "warned":result6, "reported":result7})
+    cursor8 = connection.cursor()
+    cursor8.execute("select COUNT(tweet_text) as warnactive from warning where tweet_status = 'active'")
+    result8 = cursor8.fetchall()
+
+    cursor9 = connection.cursor()
+    cursor9.execute("select COUNT(tweet_text) as warnremoved from warning where tweet_status = 'removed'")
+    result9 = cursor9.fetchall()
+
+    cursor10 = connection.cursor()
+    cursor10.execute("select COUNT(tweet_text) as warncount from warning")
+    result10 = cursor10.fetchall()
+
+    return jsonify({"raw": result,"filtered":result2,"users":result3,"warn":result4,"rep":result5, "warned":result6, "reported":result7, "warnactive":result8, "warnremoved":result9, "warncount":result10})
 
 
 @app.route("/checkWarned",methods=["POST"])
