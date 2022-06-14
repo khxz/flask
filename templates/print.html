@@ -351,7 +351,7 @@ $(document).ready(function(){
                 }).done(function(data){  
                     document.getElementById("rawTweets").innerHTML = data.raw;
                     document.getElementById("filteredTweets").innerHTML = data.filtered;
-                    var percent = .100 *data.raw / data.filtered;
+                    var percent = ( data.filtered / data.raw )*100;
                     document.getElementById("filtered_percent").innerHTML = percent.toFixed(2) + "%";
                     document.getElementById("warnedTweets").innerHTML = data.warn;
                     document.getElementById("reportedTweets").innerHTML = data.rep;

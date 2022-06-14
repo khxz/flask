@@ -114,7 +114,7 @@
                 <td id="warnremoved">da</td>
             </tr>
             <tr>
-                <td scope="row">Percentage of filtered Tweets:</td>
+                <td scope="row">Percentage of Removed Tweets:</td>
                 <td id="warnpercent">da</td>
             </tr>
             <tr>
@@ -533,9 +533,9 @@
                 }).done(function(data){  
                     document.getElementById("warnactive").innerHTML = data.warnactive;
                     document.getElementById("warnremoved").innerHTML = data.warnremoved;
-                    var percent = .100 *data.warnactive / data.warnremoved;
-                    document.getElementById("warnpercent").innerHTML = percent.toFixed(2) + "%";
                     document.getElementById("warnedTweets").innerHTML = data.warncount;
+                    var percent = (data.warnremoved / data.warncount)*100 ;
+                    document.getElementById("warnpercent").innerHTML = percent.toFixed(2) + "%";
                     
 
                 });

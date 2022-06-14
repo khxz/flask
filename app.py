@@ -331,7 +331,7 @@ def warning():
     yearofTweet = str(results[0][8])
     hourofTweet = str(results[0][9])
     try:
-        api.update_status("hello, our system noticed that your tweet/reply contains inappropriate languages that may induce or result to cyberbullying. This will serve as a warning and we advice to use proper online etiquette.", in_reply_to_status_id = tweetID , auto_populate_reply_metadata=True)
+        api.update_status("Hi, our system noticed that your tweet/reply contains inappropriate languages that may induce or result to cyberbullying or cyberhate. This will serve a warning, please advice to use proper online etiquette. Have a good day!", in_reply_to_status_id = tweetID , auto_populate_reply_metadata=True)
         connection143 = sqlite3.connect("logs.db")
         cursor123 = connection143.cursor()
         cursor123.execute("INSERT INTO warning(tweet_text, user_id, tweet_date, tweet_id, tweet_status,date_only,tweet_month,tweet_day,tweet_year,tweet_hour) VALUES(?,?,?,?,?,?,?,?,?,?)", (tweetTxt,userID,date,tweetID,status,dateofTweet,monthofTweet,dayofTweet,yearofTweet,hourofTweet))
@@ -621,7 +621,7 @@ def checkWarned():
     connection = sqlite3.connect("logs.db")
     cursor = connection.cursor()
 
-    cursor.execute("select * from warning")
+    cursor.execute("select * from warning where tweet_status = 'active'")
     result = cursor.fetchall()
     for x in range(0,len(result)):
         try:

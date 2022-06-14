@@ -50,12 +50,19 @@
     </div></nav>
 </div>
          
-         <div class="col-md-9" style="margin-left: 20%;" id="left-cont">
+          <div class="col-md-9" style="margin-left: 20%;" id="left-cont">
             <center><h2 style="margin-top: 3%;">Reported Users/Tweets</h2></center>
+            <span id="tweet_counter" class=".col-sm-3" style="position: absolute; right: 0; margin-right: 5%; height: 7vh; width: 30vh; border-radius: 2%;">
+              <h6 class="table-dark" style="color: black; padding-left: 2%;">Report Count</h6>
+              <center>
+                <span id="reportcount" style="color: black;">s</span>
+              </center>
+            </span>
             <center>
             <button type="button" class="custom-btn btn-5" onClick="printExternal()">Print</button>
             </center>
-            <table class="table" id="table1" style="background-color: #e0e5ec; table-layout: fixed; margin-bottom: 5%; ">
+            
+            <table class="table" id="table1" style="background-color: #e0e5ec; table-layout: fixed; ">
                 <thead class="table-dark">
                   <tr>
                     <th scope="col" style="width:10%;word-wrap: break-word;">Date</th>
@@ -88,7 +95,10 @@
     var printWindow = window.open( "printReport", 'Print', 'left=200, top=200, width=950, height=500, toolbar=0, resizable=0');
     printWindow.addEventListener('load', function() {
         if (Boolean(printWindow.chrome)) {
-            printWindow.print();
+
+            setTimeout(function(){
+                printWindow.print();
+            }, 500);
             setTimeout(function(){
                 printWindow.close();
             }, 500);
@@ -113,6 +123,8 @@
 
                 }).done(function(data){  
                     var length = data.tweets.length;
+                    document.getElementById("reportcount").innerHTML = length;
+
                     for(x = 0; x < length; x++){
                         var date = data.tweets[x][4];
                         var user = data.tweets[x][1];
@@ -148,7 +160,7 @@
                         }
                         
                         document.getElementById("tableBody").appendChild(tr1);
-
+                        
 
                     }
 
